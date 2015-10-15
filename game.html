@@ -9,6 +9,8 @@
 
             width: 100%;
             height: 100%;
+
+            overflow: hidden;
         }
     </style>
 </head>
@@ -42,6 +44,8 @@
                 euler.x, euler.y, euler.z, 'YZX'
             );
         });
+
+        $(window).resize(scene.resize).resize();
 
         // testing
 

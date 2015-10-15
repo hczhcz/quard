@@ -23,16 +23,14 @@ var Scene = function (container, onrender) {
         })
         .appendTo(container);
 
-    $(container)
-        .resize(function () {
-            var width = $(container).width();
-            var height = $(container).height();
+    scene.resize = function () {
+        var width = $(container).width();
+        var height = $(container).height();
 
-            scene.camera.aspect = width / height;
-            scene.camera.updateProjectionMatrix();
-            scene.renderer.setSize(width, height);
-        })
-        .resize();
+        scene.camera.aspect = width / height;
+        scene.camera.updateProjectionMatrix();
+        scene.renderer.setSize(width, height);
+    };
 
     // rendering loop
 
