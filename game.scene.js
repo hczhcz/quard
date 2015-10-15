@@ -1,21 +1,19 @@
 'use strict';
 
-var Scene = function (container, onrender) {
-    // three.js scene
+// Scene object
 
-    var scene = new THREE.Scene();
-
+var Scene = function (container, resizeBind, onrender) {
     // main camera
 
-    scene.camera = new THREE.PerspectiveCamera(
+    this.camera = new THREE.PerspectiveCamera(
         // FOV, aspect, near, far
         90, 1, 0.1, 1000
     );
 
     // main canvas
 
-    scene.renderer = new THREE.WebGLRenderer();
-    $(scene.renderer.domElement)
+    this.renderer = new THREE.WebGLRenderer();
+    $(this.renderer.domElement)
         .css({
             position: 'absolute',
             left: 0,
@@ -23,7 +21,8 @@ var Scene = function (container, onrender) {
         })
         .appendTo(container);
 
-    scene.resize = function () {
+    var scene = this;
+    var resizeHandler = function () {
         var width = $(container).width();
         var height = $(container).height();
 
@@ -31,17 +30,23 @@ var Scene = function (container, onrender) {
         scene.camera.updateProjectionMatrix();
         scene.renderer.setSize(width, height);
     };
+    resizeHandler();
+    resizeBind(resizeHandler);
 
-    // rendering loop
+    // handlers
 
-    scene.onrender = onrender;
+    this.onrender = onrender;
+};
 
-    scene.render = function () {
-        scene.onrender();
+Scene.prototype = new THREE.Scene();
 
-        requestAnimationFrame(scene.render);
-        scene.renderer.render(scene, scene.camera);
-    };
+Scene.prototype.render = function () {
+    this.onrender();
 
-    return scene;
+    this.renderer.render(this, this.camera);
+
+    var scene = this;
+    requestAnimationFrame(function () {
+        scene.render();
+    });
 };

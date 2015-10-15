@@ -28,7 +28,9 @@
             //
         });
 
-        var scene = new Scene('body', function () {
+        var scene = new Scene('body', function (handler) {
+            $(window).resize(handler);
+        }, function () {
             world.simulate();
 
             var delta = 0.001 * (world.timeNow - world.timeSim);
@@ -36,8 +38,6 @@
             object.position.copy(body.predictPosition(delta));
             object.rotation.setFromVector3(body.predictRotation(delta), 'YZX');
         });
-
-        $(window).resize(scene.resize).resize();
 
         // testing
 

@@ -1,5 +1,7 @@
 'use strict';
 
+// CANNON.Body extensions
+
 CANNON.Body.prototype.predictPosition = function (delta) {
     return this.position.vadd(this.velocity.mult(delta));
 };
@@ -11,33 +13,33 @@ CANNON.Body.prototype.predictRotation = function (delta) {
     return euler.vadd(this.angularVelocity.mult(delta));
 };
 
+// World object
+
 var World = function (onsimulate) {
-    // cannon.js world
+    // time management
 
-    var world = new CANNON.World();
+    this.timeStep = 100;
+    this.timeSim = new Date().getTime();
+    this.timeNow = new Date().getTime();
 
-    // simulation loop
+    // handlers
 
-    world.timeStep = 100;
-    world.timeSim = new Date().getTime();
-    world.timeNow = new Date().getTime();
+    this.onsimulate = onsimulate;
+};
 
-    world.onsimulate = onsimulate;
+World.prototype = new CANNON.World();
 
-    world.simulate = function () {
-        world.timeNow = new Date().getTime();
+World.prototype.simulate = function () {
+    this.timeNow = new Date().getTime();
 
-        if (world.timeSim < world.timeNow - world.timeStep) {
-            world.timeSim += world.timeStep;
+    if (this.timeSim < this.timeNow - this.timeStep) {
+        this.timeSim += this.timeStep;
 
-            if (world.timeSim < world.timeNow - world.timeStep) {
-                world.timeSim = world.timeNow - world.timeStep;
-            }
-
-            world.onsimulate();
-            world.step(0.001 * world.timeStep);
+        if (this.timeSim < this.timeNow - this.timeStep) {
+            this.timeSim = this.timeNow - this.timeStep;
         }
-    };
 
-    return world;
+        this.onsimulate();
+        this.step(0.001 * this.timeStep);
+    }
 };
