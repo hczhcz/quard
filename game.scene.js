@@ -1,6 +1,6 @@
 'use strict';
 
-var Scene = function (container) {
+var Scene = function (container, onrender) {
     // three.js scene
 
     var scene = new THREE.Scene();
@@ -36,11 +36,15 @@ var Scene = function (container) {
 
     // rendering loop
 
-    scene.onrender = function () {
-        requestAnimationFrame(scene.onrender);
+    scene.onrender = onrender;
+
+    var render = function () {
+        scene.onrender();
+
+        requestAnimationFrame(render);
         scene.renderer.render(scene, scene.camera);
     };
-    scene.onrender();
+    render();
 
     return scene;
 };
