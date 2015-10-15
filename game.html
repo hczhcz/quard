@@ -25,39 +25,39 @@
         'use strict';
 
         var world = new World(function () {
+            var shape = new CANNON.Sphere(1);
+            var body = new CANNON.Body({mass: 1}); // mass
+
+            body.addShape(shape);
+            this.addBody(body);
+            this.testBody = body;
+        }, function () {
             //
         });
 
         var scene = new Scene('body', function (handler) {
             $(window).resize(handler);
         }, function () {
+            var geometry = new THREE.SphereGeometry(1, 16, 16);
+            var material = new THREE.MeshBasicMaterial({color: 0x808080});
+            var object = new THREE.Mesh(geometry, material);
+
+            this.add(object);
+            this.testObject = object;
+
+            this.camera.position.z = 5;
+        }, function () {
             world.simulate();
 
             var delta = 0.001 * (world.timeNow - world.timeSim);
 
-            object.position.copy(body.predictPosition(delta));
-            object.rotation.setFromVector3(body.predictRotation(delta), 'YZX');
+            this.testObject.position.copy(world.testBody.predictPosition(delta));
+            this.testObject.rotation.setFromVector3(world.testBody.predictRotation(delta), 'YZX');
         });
 
         // testing
-
-        var shape = new CANNON.Sphere(1);
-        var body = new CANNON.Body({mass: 1}); // mass
-        body.addShape(shape);
-        world.addBody(body);
-
-        var geometry = new THREE.SphereGeometry(1, 16, 16);
-        var material = new THREE.MeshBasicMaterial({color: 0x808080});
-        var object = new THREE.Mesh(geometry, material);
-        scene.add(object);
-
-        scene.camera.position.z = 5;
-
-        scene.render();
-
-        // testing
         world.gravity.set(0, -1, 0);
-        body.angularVelocity.set(0.1, 0, 0);
+        world.testBody.angularVelocity.set(0.1, 0, 0);
     </script>
 </body>
 </html>

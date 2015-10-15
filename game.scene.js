@@ -2,7 +2,7 @@
 
 // Scene object
 
-var Scene = function (container, resizeBind, onrender) {
+var Scene = function (container, resizeBind, oninit, onrender) {
     // main camera
 
     this.camera = new THREE.PerspectiveCamera(
@@ -35,7 +35,13 @@ var Scene = function (container, resizeBind, onrender) {
 
     // handlers
 
+    this.oninit = oninit;
     this.onrender = onrender;
+
+    // init
+
+    this.oninit();
+    this.render();
 };
 
 Scene.prototype = new THREE.Scene();

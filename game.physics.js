@@ -15,7 +15,7 @@ CANNON.Body.prototype.predictRotation = function (delta) {
 
 // World object
 
-var World = function (onsimulate) {
+var World = function (oninit, onsimulate) {
     // time management
 
     this.timeStep = 100;
@@ -24,7 +24,12 @@ var World = function (onsimulate) {
 
     // handlers
 
+    this.oninit = oninit;
     this.onsimulate = onsimulate;
+
+    // init
+
+    this.oninit();
 };
 
 World.prototype = new CANNON.World();
