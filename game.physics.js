@@ -8,21 +8,24 @@ var World = function (onsimulate) {
     // simulation loop
 
     world.timeStep = 100;
-    world.timeLast = new Date().getTime();
+    world.timeSim = new Date().getTime();
+    world.timeNow = new Date().getTime();
 
     world.onsimulate = onsimulate;
 
     world.simulate = function () {
-        var time = new Date().getTime();
+        world.timeNow = new Date().getTime();
 
-        if (world.timeLast + world.timeStep < time) {
+        if (world.timeSim < world.timeNow - world.timeStep) {
+            world.timeSim += world.timeStep;
+
+            if (world.timeSim < world.timeNow - world.timeStep) {
+                world.timeSim = world.timeNow - world.timeStep;
+            }
+
             world.onsimulate();
-
             world.step(0.001 * world.timeStep);
-            world.timeLast += world.timeStep;
         }
-
-        return time - world.timeLast;
     };
 
     return world;

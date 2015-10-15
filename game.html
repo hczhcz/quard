@@ -25,14 +25,22 @@
         var world = new World(function () {
             //
         });
-        world.gravity.set(0, -1, 0); // TODO
 
         var scene = new Scene('body', function () {
-            var delta = world.simulate();
+            world.simulate();
 
-            object.position
-                .copy(body.position)
-                .addScaledVector(body.velocity, 0.001 * delta);
+            var delta = 0.001 * (world.timeNow - world.timeSim);
+
+            object.position.copy(
+                body.position.vadd(body.velocity.mult(delta))
+            );
+
+            var euler = new CANNON.Vec3(0, 0, 0);
+            body.quaternion.toEuler(euler);
+            euler = euler.vadd(body.angularVelocity.mult(delta));
+            object.rotation.set(
+                euler.x, euler.y, euler.z, 'YZX'
+            );
         });
 
         // testing
@@ -50,6 +58,10 @@
         scene.camera.position.z = 5;
 
         scene.render();
+
+        // testing
+        world.gravity.set(0, -1, 0);
+        body.angularVelocity.set(0.1, 0, 0);
     </script>
 </body>
 </html>
