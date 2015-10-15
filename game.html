@@ -14,6 +14,7 @@
 </head>
 <body>
     <script src='jquery.min.js'></script>
+    <script src='cannon.min.js'></script>
     <script src='three.min.js'></script>
     <script src='game.physics.js'></script>
     <script src='game.scene.js'></script>
@@ -21,23 +22,34 @@
     <script>
         'use strict';
 
+        var world = new World(function () {
+            //
+        });
+        world.gravity.set(0, -1, 0); // TODO
+
         var scene = new Scene('body', function () {
-            // TODO
+            var delta = world.simulate();
+
+            object.position
+                .copy(body.position)
+                .addScaledVector(body.velocity, 0.001 * delta);
         });
 
-        var geometry = new THREE.BoxGeometry(1, 1, 1);
-        var material = new THREE.MeshBasicMaterial({
-            color: 0x00ff00,
-        });
-        var cube = new THREE.Mesh(
-            new THREE.BoxGeometry(1, 1, 1),
-            new THREE.MeshBasicMaterial({
-                color: 0x00ff00,
-            })
-        );
-        scene.add(cube);
+        // testing
+
+        var shape = new CANNON.Sphere(1);
+        var body = new CANNON.Body({mass: 1}); // mass
+        body.addShape(shape);
+        world.addBody(body);
+
+        var geometry = new THREE.SphereGeometry(1, 16, 16);
+        var material = new THREE.MeshBasicMaterial({color: 0x808080});
+        var object = new THREE.Mesh(geometry, material);
+        scene.add(object);
 
         scene.camera.position.z = 5;
+
+        scene.render();
     </script>
 </body>
 </html>

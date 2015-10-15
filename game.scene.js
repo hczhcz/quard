@@ -9,7 +9,7 @@ var Scene = function (container, onrender) {
 
     scene.camera = new THREE.PerspectiveCamera(
         // FOV, aspect, near, far
-        75, 1, 0.1, 1000
+        90, 1, 0.1, 1000
     );
 
     // main canvas
@@ -38,13 +38,12 @@ var Scene = function (container, onrender) {
 
     scene.onrender = onrender;
 
-    var render = function () {
+    scene.render = function () {
         scene.onrender();
 
-        requestAnimationFrame(render);
+        requestAnimationFrame(scene.render);
         scene.renderer.render(scene, scene.camera);
     };
-    render();
 
     return scene;
 };
