@@ -63,6 +63,13 @@ var GameScene = function (container, resizeBind, settingGetter, oninit, onrender
     return new Scene(container, resizeBind, function () {
         var settings = settingGetter();
 
+        // fog
+
+        this.fog = new THREE.Fog(
+            // color, near, far
+            0xc00080, 2, 2 * settings.zone.size
+        );
+
         // the big sphere
 
         this.zone = new THREE.Mesh(
@@ -77,17 +84,8 @@ var GameScene = function (container, resizeBind, settingGetter, oninit, onrender
             })
         );
         this.zone.scale.multiplyScalar(settings.zone.size);
-        // this.zone.material.transparent = true;
-        // this.zone.material.opacity = 1;
         this.zone.material.refractionRatio = 0.6;
         this.add(this.zone);
-
-        // fog
-
-        this.fog = new THREE.Fog(
-            // color, near, far
-            0xc00080, 2, 2 * settings.zone.size
-        );
 
         // light // TODO
 
@@ -98,8 +96,12 @@ var GameScene = function (container, resizeBind, settingGetter, oninit, onrender
         this.light.position.set(0, 0, 100);
         this.add(this.light);
 
+        // the handler
+
         oninit.call(this);
     }, function () {
+        // the handler
+
         onrender.call(this);
     });
 };

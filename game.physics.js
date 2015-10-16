@@ -51,10 +51,16 @@ World.prototype.simulate = function () {
 
 // game world
 
-var GameWorld = function (oninit, onsimulate) {
+var GameWorld = function (settingGetter, oninit, onsimulate) {
     return new World(function () {
+        var settings = settingGetter();
+
+        // the handler
+
         oninit.call(this);
     }, function () {
+        // the handler
+
         onsimulate.call(this);
     });
 };

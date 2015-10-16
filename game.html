@@ -24,7 +24,7 @@
     <script>
         'use strict';
 
-        var world = new GameWorld(function () {
+        var world = new GameWorld(testGameMode, function () {
             var shape = new CANNON.Sphere(1);
             var body = new CANNON.Body({mass: 1}); // mass
 
