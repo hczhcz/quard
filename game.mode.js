@@ -4,7 +4,11 @@
 var testGameMode = function () {
     return {
         zone: {
-            size: 200,
+            // sizes
+            size: 100,
+
+            // forces
+            gravity: 5,
         },
         players: [
             //

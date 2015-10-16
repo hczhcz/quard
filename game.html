@@ -42,7 +42,7 @@
             var body2 = new CANNON.Body({
                 mass: 1, material: mat2, shape: shape2
             }); // mass
-            body2.position.set(0, -120, 0);
+            body2.position.set(0, -60, 0);
             body2.collisionFilterGroup = 1;
             body2.collisionFilterMask = 1;
 
@@ -56,7 +56,7 @@
             );
 
             // testing
-            body.velocity.set(0, -50, 0);
+            body.velocity.set(0, -20, 0);
         }, function () {
             //
         });
@@ -82,7 +82,7 @@
             ///
 
             var spotLight = new THREE.SpotLight(0xffffff);
-            spotLight.position.set(0, -180, 40);
+            spotLight.position.set(0, -90, 20);
 
             // spotLight.castShadow = true;
 
@@ -97,7 +97,7 @@
 
             ///
 
-            this.camera.position.set(0, -180, 40);
+            this.camera.position.set(0, -90, 20);
             // this.camera.position.set(0, 0, 5);
         }, function () {
             world.simulate();

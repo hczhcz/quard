@@ -18,7 +18,7 @@ CANNON.Body.prototype.predictRotation = function (delta) {
 var World = function (oninit, onsimulate) {
     // time management
 
-    this.timeStep = 100;
+    this.timeStep = 1000 / 30;
     this.timeSim = new Date().getTime();
     this.timeNow = new Date().getTime();
 
