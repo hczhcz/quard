@@ -76,7 +76,9 @@ var GameWorld = function (settingGetter, oninit, onsimulate) {
 
             if (body.collisionFilterGroup == 1) {
                 body.force = body.force.vadd(
-                    body.position.mult(gravity)
+                    body.position.mult(
+                        gravity * body.mass
+                    )
                 );
 
                 var distance = body.position.length();
@@ -88,6 +90,7 @@ var GameWorld = function (settingGetter, oninit, onsimulate) {
                                 ? limiting1 : limiting2
                             )
                             * (distance - settings.zone.inner)
+                            * body.mass
                         )
                     );
                 }
