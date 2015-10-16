@@ -18,7 +18,7 @@ CANNON.Body.prototype.predictRotation = function (delta) {
 var World = function (oninit, onsimulate) {
     // time management
 
-    this.timeStep = 1000 / 30;
+    this.timeStep = 1000 / 60;
     this.timeSim = new Date().getTime();
     this.timeNow = new Date().getTime();
 
@@ -64,6 +64,12 @@ var GameWorld = function (settingGetter, oninit, onsimulate) {
         // forces
 
         var gravity = settings.zone.gravity / settings.zone.size;
+        var limiting1 = -settings.zone.limiting1 / Math.pow(
+            settings.zone.size - settings.zone.inner, 2
+        );
+        var limiting2 = -settings.zone.limiting2 / Math.pow(
+            settings.zone.size - settings.zone.inner, 2
+        );
 
         for (var i in this.bodies) {
             var body = this.bodies[i];
@@ -72,6 +78,19 @@ var GameWorld = function (settingGetter, oninit, onsimulate) {
                 body.force = body.force.vadd(
                     body.position.mult(gravity)
                 );
+
+                var distance = body.position.length();
+                if (distance > settings.zone.inner) {
+                    body.force = body.force.vadd(
+                        body.position.mult(
+                            (
+                                body.position.dot(body.velocity) > 0
+                                ? limiting1 : limiting2
+                            )
+                            * (distance - settings.zone.inner)
+                        )
+                    );
+                }
             }
         }
 
