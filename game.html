@@ -39,13 +39,35 @@
             $(window).resize(handler);
         }, testGameMode, function () {
             var geometry = new THREE.SphereGeometry(1, 16, 16);
-            var material = new THREE.MeshLambertMaterial({color: 0x808080});
+            var material = new THREE.MeshLambertMaterial({
+                color: 0x808080,
+                map: THREE.ImageUtils.loadTexture('background.jpg'),
+            });
             var object = new THREE.Mesh(geometry, material);
 
             this.add(object);
             this.testObject = object;
 
-            this.camera.position.z = 5;
+            ///
+
+            var spotLight = new THREE.SpotLight(0xffffff);
+            spotLight.position.set(0, -195, 5);
+
+            // spotLight.castShadow = true;
+
+            // spotLight.shadowMapWidth = 1024;
+            // spotLight.shadowMapHeight = 1024;
+
+            // spotLight.shadowCameraNear = 500;
+            // spotLight.shadowCameraFar = 4000;
+            // spotLight.shadowCameraFov = 30;
+
+            this.add(spotLight);
+
+            ///
+
+            this.camera.position.set(0, -190, 5);
+            // this.camera.position.set(0, 0, 5);
         }, function () {
             world.simulate();
 
