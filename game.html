@@ -25,12 +25,38 @@
         'use strict';
 
         var world = new GameWorld(testGameMode, function () {
-            var shape = new CANNON.Sphere(1);
-            var body = new CANNON.Body({mass: 1}); // mass
+            var mat = new CANNON.Material();
+            var mat2 = new CANNON.Material();
 
-            body.addShape(shape);
+            var shape = new CANNON.Sphere(1);
+            var body = new CANNON.Body({
+                mass: 1, material: mat, shape: shape
+            }); // mass
+            body.collisionFilterGroup = 1;
+            body.collisionFilterMask = 1;
+
             this.addBody(body);
             this.testBody = body;
+
+            var shape2 = new CANNON.Sphere(1);
+            var body2 = new CANNON.Body({
+                mass: 1, material: mat2, shape: shape2
+            }); // mass
+            body2.position.set(0, -120, 0);
+            body2.collisionFilterGroup = 1;
+            body2.collisionFilterMask = 1;
+
+            this.addBody(body2);
+            this.testBody2 = body2;
+
+            this.addMaterial(mat);
+            this.addMaterial(mat2);
+            this.addContactMaterial(
+                new CANNON.ContactMaterial(mat, mat2)
+            );
+
+            // testing
+            body.velocity.set(0, -50, 0);
         }, function () {
             //
         });
@@ -48,10 +74,15 @@
             this.add(object);
             this.testObject = object;
 
+            var object2 = new THREE.Mesh(geometry, material);
+
+            this.add(object2);
+            this.testObject2 = object2;
+
             ///
 
             var spotLight = new THREE.SpotLight(0xffffff);
-            spotLight.position.set(0, -195, 5);
+            spotLight.position.set(0, -180, 40);
 
             // spotLight.castShadow = true;
 
@@ -66,7 +97,7 @@
 
             ///
 
-            this.camera.position.set(0, -190, 5);
+            this.camera.position.set(0, -180, 40);
             // this.camera.position.set(0, 0, 5);
         }, function () {
             world.simulate();
@@ -75,6 +106,8 @@
 
             this.testObject.position.copy(world.testBody.predictPosition(delta));
             this.testObject.rotation.setFromVector3(world.testBody.predictRotation(delta), 'YZX');
+            this.testObject2.position.copy(world.testBody2.predictPosition(delta));
+            this.testObject2.rotation.setFromVector3(world.testBody2.predictRotation(delta), 'YZX');
         });
     </script>
 </body>
