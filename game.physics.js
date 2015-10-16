@@ -59,6 +59,22 @@ var GameWorld = function (settingGetter, oninit, onsimulate) {
 
         oninit.call(this);
     }, function () {
+        var settings = settingGetter();
+
+        // forces
+
+        var gravity = settings.zone.gravity / settings.zone.size;
+
+        for (var i in this.bodies) {
+            var body = this.bodies[i];
+
+            if (body.collisionFilterGroup == 1) {
+                body.force = body.force.vadd(
+                    body.position.mult(gravity)
+                );
+            }
+        }
+
         // the handler
 
         onsimulate.call(this);
