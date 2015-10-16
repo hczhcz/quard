@@ -13,7 +13,7 @@ CANNON.Body.prototype.predictRotation = function (delta) {
     return euler.vadd(this.angularVelocity.mult(delta));
 };
 
-// World object
+// basic physics engine object
 
 var World = function (oninit, onsimulate) {
     // time management
@@ -47,4 +47,14 @@ World.prototype.simulate = function () {
         this.onsimulate();
         this.step(0.001 * this.timeStep);
     }
+};
+
+// game world
+
+var GameWorld = function (oninit, onsimulate) {
+    return new World(function () {
+        oninit.call(this);
+    }, function () {
+        onsimulate.call(this);
+    });
 };

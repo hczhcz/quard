@@ -24,7 +24,7 @@
     <script>
         'use strict';
 
-        var world = new World(function () {
+        var world = new GameWorld(function () {
             var shape = new CANNON.Sphere(1);
             var body = new CANNON.Body({mass: 1}); // mass
 
@@ -35,11 +35,11 @@
             //
         });
 
-        var scene = new Scene('body', function (handler) {
+        var scene = new GameScene('body', function (handler) {
             $(window).resize(handler);
-        }, function () {
+        }, testGameMode, function () {
             var geometry = new THREE.SphereGeometry(1, 16, 16);
-            var material = new THREE.MeshBasicMaterial({color: 0x808080});
+            var material = new THREE.MeshLambertMaterial({color: 0x808080});
             var object = new THREE.Mesh(geometry, material);
 
             this.add(object);
@@ -54,10 +54,6 @@
             this.testObject.position.copy(world.testBody.predictPosition(delta));
             this.testObject.rotation.setFromVector3(world.testBody.predictRotation(delta), 'YZX');
         });
-
-        // testing
-        world.gravity.set(0, -1, 0);
-        world.testBody.angularVelocity.set(0.1, 0, 0);
     </script>
 </body>
 </html>

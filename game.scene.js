@@ -1,6 +1,6 @@
 'use strict';
 
-// Scene object
+// basic 3d scene object
 
 var Scene = function (container, resizeBind, oninit, onrender) {
     // main camera
@@ -54,5 +54,34 @@ Scene.prototype.render = function () {
     var scene = this;
     requestAnimationFrame(function () {
         scene.render();
+    });
+};
+
+// game scene
+
+var GameScene = function (container, resizeBind, settingGetter, oninit, onrender) {
+    return new Scene(container, resizeBind, function () {
+        var settings = settingGetter();
+
+        this.zone = new THREE.Mesh(
+            new THREE.SphereGeometry(1, 32, 32),
+            new THREE.MeshLambertMaterial({
+                color: 0x808080,
+                side: THREE.BackSide,
+            })
+        );
+        this.zone.scale.multiplyScalar(settings.zone.size);
+        this.add(this.zone);
+
+        this.light = new THREE.PointLight(
+            // hex, intensity, distance, decay
+            0xffffff, 1, 1000, 1
+        );
+        this.light.position.set(0, 0, 100);
+        this.add(this.light);
+
+        oninit.call(this);
+    }, function () {
+        onrender.call(this);
     });
 };
