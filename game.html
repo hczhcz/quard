@@ -24,7 +24,7 @@
     <script>
         'use strict';
 
-        var world = new GameWorld(testGameMode, function () {
+        var world = new GameWorld(testGameMode(), function () {
             var mat = new CANNON.Material();
             var mat2 = new CANNON.Material();
 
@@ -32,8 +32,6 @@
             var body = new CANNON.Body({
                 mass: 1, material: mat, shape: shape
             }); // mass
-            body.collisionFilterGroup = 1;
-            body.collisionFilterMask = 1;
 
             this.addBody(body);
             this.testBody = body;
@@ -43,8 +41,6 @@
                 mass: 3, material: mat2, shape: shape2
             }); // mass
             body2.position.set(0.00001, -60, 0);
-            body2.collisionFilterGroup = 1;
-            body2.collisionFilterMask = 1;
 
             this.addBody(body2);
             this.testBody2 = body2;
@@ -63,7 +59,7 @@
 
         var scene = new GameScene('body', function (handler) {
             $(window).resize(handler);
-        }, testGameMode, function () {
+        }, testGameMode(), function () {
             var geometry = new THREE.SphereGeometry(1, 16, 16);
             var material = new THREE.MeshLambertMaterial({
                 color: 0x808080,

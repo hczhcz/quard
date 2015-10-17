@@ -55,145 +55,59 @@ World.prototype.simulate = function () {
 
 // game world
 
-var GameWorld = function (settingGetter, oninit, onsimulate) {
-    return new World(function () {
-        var settings = settingGetter();
+var GameWorld = function (settings, oninit, onsimulate) {
+    World.call(this, function () {
+        this.settings = settings;
 
         // objects
 
-        var world = this;
-        var addObject = function (mode, instance) {
-            var physics = settings.physics[instance.type];
-
-            var body = new CANNON.Body({
-                shape: new CANNON.Sphere(physics.size),
-                mass: physics.mass,
-            });
-
-            body.game = {
-                mode: mode,
-                type: instance.type,
-                force: physics.force,
-                stiction: physics.stiction,
-                interaction: physics.interaction,
-            };
-
-            switch (body.game.mode) {
-                case 'player':
-                    break;
-
-                case 'goal':
-                    body.collisionResponse = false;
-                    break;
-
-                case 'ball':
-                    body.wanderDirection = {
-                        x: Math.random(),
-                        y: Math.random(),
-                        z: Math.random(),
-                    };
-                    body.wanderTime = 0;
-                    break;
-
-                default:
-                    throw new Error();
-            }
-
-            Object.defineProperty(instance, 'position', {
-                enumerable: true,
-                get: function () {return body.position;},
-                set: function (value) {body.position.copy(value);},
-            });
-            Object.defineProperty(instance, 'quaternion', {
-                enumerable: true,
-                get: function () {return body.quaternion;},
-                set: function (value) {body.quaternion.copy(value);},
-            });
-            Object.defineProperty(instance, 'rotation', {
-                enumerable: true,
-                get: function () {return body.getRotation();},
-            });
-            Object.defineProperty(instance, 'velocity', {
-                enumerable: true,
-                get: function () {return body.velocity;},
-                set: function (value) {body.velocity.copy(value);},
-            });
-            Object.defineProperty(instance, 'angularVelocity', {
-                enumerable: true,
-                get: function () {return body.angularVelocity;},
-                set: function (value) {body.angularVelocity.copy(value);},
-            });
-            Object.defineProperty(instance, 'predictedPosition', {
-                enumerable: true,
-                get: function () {
-                    return body.predictPosition(world.timeNow - world.timeSim);
-                },
-            });
-            Object.defineProperty(instance, 'predictedRotation', {
-                enumerable: true,
-                get: function () {
-                    return body.predictRotation(world.timeNow - world.timeSim);
-                },
-            });
-            // TODO: configurable instance.type?
-
-            instance.position = instance.initPosition;
-            instance.quaternion = instance.initQuaternion;
-
-            world.addBody(body);
-        };
-
-        for (var i in settings.players) {
-            addObject('player', settings.players[i]);
+        for (var i in this.settings.players) {
+            this.addObject('player', this.settings.players[i]);
         }
 
-        for (var i in settings.goals) {
-            addObject('goal', settings.goals[i]);
+        for (var i in this.settings.goals) {
+            this.addObject('goal', this.settings.goals[i]);
         }
 
-        for (var i in settings.balls) {
-            addObject('ball', settings.balls[i]);
+        for (var i in this.settings.balls) {
+            this.addObject('ball', this.settings.balls[i]);
         }
 
         // the handler
 
         oninit.call(this);
     }, function () {
-        var settings = settingGetter();
-
         // forces
 
-        var gravity = settings.zone.gravity / settings.zone.size;
-        var limiting1 = -settings.zone.limiting1 / Math.pow(
-            settings.zone.size - settings.zone.inner, 2
+        var gravity = this.settings.zone.gravity / this.settings.zone.size;
+        var limiting1 = -this.settings.zone.limiting1 / Math.pow(
+            this.settings.zone.size - this.settings.zone.inner, 2
         );
-        var limiting2 = -settings.zone.limiting2 / Math.pow(
-            settings.zone.size - settings.zone.inner, 2
+        var limiting2 = -this.settings.zone.limiting2 / Math.pow(
+            this.settings.zone.size - this.settings.zone.inner, 2
         );
 
         for (var i in this.bodies) {
             var body = this.bodies[i];
 
-            if (body.collisionFilterGroup == 1) {
+            body.force = body.force.vadd(
+                body.position.mult(
+                    gravity * body.mass
+                )
+            );
+
+            var distance = body.position.length();
+            if (distance > this.settings.zone.inner) {
                 body.force = body.force.vadd(
                     body.position.mult(
-                        gravity * body.mass
+                        (
+                            body.position.dot(body.velocity) > 0 ?
+                            limiting1 : limiting2
+                        )
+                        * (distance - this.settings.zone.inner)
+                        * body.mass
                     )
                 );
-
-                var distance = body.position.length();
-                if (distance > settings.zone.inner) {
-                    body.force = body.force.vadd(
-                        body.position.mult(
-                            (
-                                body.position.dot(body.velocity) > 0 ?
-                                limiting1 : limiting2
-                            )
-                            * (distance - settings.zone.inner)
-                            * body.mass
-                        )
-                    );
-                }
             }
         }
 
@@ -201,4 +115,87 @@ var GameWorld = function (settingGetter, oninit, onsimulate) {
 
         onsimulate.call(this);
     });
+};
+
+GameWorld.prototype = new World(function () {}, function () {});
+
+GameWorld.prototype.addObject = function (mode, instance) {
+    var physics = this.settings.physics[instance.type];
+
+    var body = new CANNON.Body({
+        shape: new CANNON.Sphere(physics.size),
+        mass: physics.mass,
+    });
+
+    body.game = {
+        mode: mode,
+        type: instance.type,
+        force: physics.force,
+        stiction: physics.stiction,
+        interaction: physics.interaction,
+    };
+
+    switch (body.game.mode) {
+        case 'player':
+            break;
+
+        case 'goal':
+            body.collisionResponse = false;
+            break;
+
+        case 'ball':
+            body.wanderDirection = {
+                x: Math.random(),
+                y: Math.random(),
+                z: Math.random(),
+            };
+            body.wanderTime = 0;
+            break;
+
+        default:
+            throw new Error();
+    }
+
+    Object.defineProperty(instance, 'position', {
+        enumerable: true,
+        get: function () {return body.position;},
+        set: function (value) {body.position.copy(value);},
+    });
+    Object.defineProperty(instance, 'quaternion', {
+        enumerable: true,
+        get: function () {return body.quaternion;},
+        set: function (value) {body.quaternion.copy(value);},
+    });
+    Object.defineProperty(instance, 'rotation', {
+        enumerable: true,
+        get: function () {return body.getRotation();},
+    });
+    Object.defineProperty(instance, 'velocity', {
+        enumerable: true,
+        get: function () {return body.velocity;},
+        set: function (value) {body.velocity.copy(value);},
+    });
+    Object.defineProperty(instance, 'angularVelocity', {
+        enumerable: true,
+        get: function () {return body.angularVelocity;},
+        set: function (value) {body.angularVelocity.copy(value);},
+    });
+    Object.defineProperty(instance, 'predictedPosition', {
+        enumerable: true,
+        get: function () {
+            return body.predictPosition(this.timeNow - this.timeSim);
+        },
+    });
+    Object.defineProperty(instance, 'predictedRotation', {
+        enumerable: true,
+        get: function () {
+            return body.predictRotation(this.timeNow - this.timeSim);
+        },
+    });
+    // TODO: configurable instance.type?
+
+    instance.position = instance.initPosition;
+    instance.quaternion = instance.initQuaternion;
+
+    this.addBody(body);
 };

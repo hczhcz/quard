@@ -59,15 +59,15 @@ Scene.prototype.render = function () {
 
 // game scene
 
-var GameScene = function (container, resizeBind, settingGetter, oninit, onrender) {
+var GameScene = function (container, resizeBind, settings, oninit, onrender) {
     return new Scene(container, resizeBind, function () {
-        var settings = settingGetter();
+        this.settings = settings;
 
         // fog
 
         this.fog = new THREE.Fog(
             // color, near, far
-            0xc00080, 2, 2 * settings.zone.size
+            0xc00080, 2, 2 * this.settings.zone.size
         );
 
         // the big sphere
@@ -83,7 +83,7 @@ var GameScene = function (container, resizeBind, settingGetter, oninit, onrender
                 side: THREE.BackSide,
             })
         );
-        this.zone.scale.multiplyScalar(settings.zone.size);
+        this.zone.scale.multiplyScalar(this.settings.zone.size);
         this.zone.material.refractionRatio = 0.6;
         this.add(this.zone);
 
