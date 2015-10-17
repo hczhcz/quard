@@ -90,6 +90,10 @@ var GameWorld = function (settings, oninit, onsimulate) {
         for (var i in this.bodies) {
             var body = this.bodies[i];
 
+            if (!body.game) {
+                continue;
+            }
+
             body.force = body.force.vadd(
                 body.position.mult(
                     gravity * body.mass
@@ -120,22 +124,15 @@ var GameWorld = function (settings, oninit, onsimulate) {
 GameWorld.prototype = Object.create(World.prototype);
 
 GameWorld.prototype.addObject = function (mode, instance) {
-    var physics = this.settings.physics[instance.type];
-
     var body = new CANNON.Body({
-        shape: new CANNON.Sphere(physics.size),
-        mass: physics.mass,
+        shape: new CANNON.Sphere(1),
     });
 
-    body.game = {
-        mode: mode,
-        type: instance.type,
-        force: physics.force,
-        stiction: physics.stiction,
-        interaction: physics.interaction,
-    };
+    body.game = instance;
 
-    switch (body.game.mode) {
+    // apply mode
+
+    switch (mode) {
         case 'player':
             break;
 
@@ -156,46 +153,67 @@ GameWorld.prototype.addObject = function (mode, instance) {
             throw new Error();
     }
 
-    Object.defineProperty(instance, 'position', {
+    // set up properties
+
+    var world = this;
+    Object.defineProperty(body.game, 'type', {
+        enumerable: true,
+        get: function () {return body.game._type;},
+        set: function (value) {
+            var physics = world.settings.physics[value];
+
+            body.shapes[0].radius = physics.size; // TODO
+            body.mass = physics.mass;
+
+            body.game._type = value;
+        }
+    });
+    Object.defineProperty(body.game, 'position', {
         enumerable: true,
         get: function () {return body.position;},
         set: function (value) {body.position.copy(value);},
     });
-    Object.defineProperty(instance, 'quaternion', {
+    Object.defineProperty(body.game, 'quaternion', {
         enumerable: true,
         get: function () {return body.quaternion;},
         set: function (value) {body.quaternion.copy(value);},
     });
-    Object.defineProperty(instance, 'rotation', {
-        enumerable: true,
-        get: function () {return body.getRotation();},
-    });
-    Object.defineProperty(instance, 'velocity', {
+    // Object.defineProperty(body.game, 'rotation', {
+    //     enumerable: true,
+    //     get: function () {return body.getRotation();},
+    // });
+    Object.defineProperty(body.game, 'velocity', {
         enumerable: true,
         get: function () {return body.velocity;},
         set: function (value) {body.velocity.copy(value);},
     });
-    Object.defineProperty(instance, 'angularVelocity', {
+    Object.defineProperty(body.game, 'angularVelocity', {
         enumerable: true,
         get: function () {return body.angularVelocity;},
         set: function (value) {body.angularVelocity.copy(value);},
     });
-    Object.defineProperty(instance, 'predictedPosition', {
+    Object.defineProperty(body.game, 'predictedPosition', {
         enumerable: true,
         get: function () {
-            return body.predictPosition(this.timeNow - this.timeSim);
+            return body.predictPosition(world.timeNow - world.timeSim);
         },
     });
-    Object.defineProperty(instance, 'predictedRotation', {
+    Object.defineProperty(body.game, 'predictedRotation', {
         enumerable: true,
         get: function () {
-            return body.predictRotation(this.timeNow - this.timeSim);
+            return body.predictRotation(world.timeNow - world.timeSim);
         },
     });
-    // TODO: configurable instance.type?
 
-    instance.position = instance.initPosition;
-    instance.quaternion = instance.initQuaternion;
+    body.game.getBody = function () {
+        return body;
+    };
+
+    // apply
+
+    body.game.type = body.game.initType;
+    body.game.position = body.game.initPosition;
+    body.game.quaternion = body.game.initQuaternion;
 
     this.addBody(body);
 };

@@ -76,7 +76,7 @@ var testGameMode = function () {
 
         players: [
             {
-                type: 'player',
+                initType: 'player',
                 initPosition: {x: 0, y: -90, z: 0},
                 initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
@@ -84,7 +84,7 @@ var testGameMode = function () {
 
         goals: [
             {
-                type: 'hole',
+                initType: 'hole',
                 initPosition: {x: 0, y: -80, z: -40},
                 initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
@@ -92,17 +92,17 @@ var testGameMode = function () {
 
         balls: [
             {
-                type: 'quaffle',
+                initType: 'quaffle',
                 initPosition: {x: -10, y: -80, z: -40},
                 initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
             {
-                type: 'bludger',
+                initType: 'bludger',
                 initPosition: {x: 10, y: -80, z: -40},
                 initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
             {
-                type: 'snitch',
+                initType: 'snitch',
                 initPosition: {x: 0, y: -70, z: -40},
                 initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
