@@ -18,7 +18,7 @@ var testGameMode = function () {
         physics: {
             // schema: {
             //     size, mass,
-            //     force?, stiction?, transparent?,
+            //     force?, stiction?,
             //     interaction?: {<type>?, ...},
             // }
 
@@ -33,8 +33,6 @@ var testGameMode = function () {
             hole: {
                 size: 1, // L
                 mass: 0, // M, not movable
-
-                transparent: true, // no collision
             },
 
             quaffle: {
@@ -72,42 +70,42 @@ var testGameMode = function () {
                     snitch: 5, // M * L * T^-2
                 },
             },
-        }
+        },
 
         // instances
 
         players: [
             {
                 type: 'player',
-                position: {x: 0, y: -90, z: 0},
-                quaternion: {x: 0, y: 0, z: 0, w: 1},
+                initPosition: {x: 0, y: -90, z: 0},
+                initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
         ],
 
         goals: [
             {
                 type: 'hole',
-                position: {x: 0, y: -80, z: -40},
-                quaternion: {x: 0, y: 0, z: 0, w: 1},
+                initPosition: {x: 0, y: -80, z: -40},
+                initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
         ],
 
         balls: [
             {
                 type: 'quaffle',
-                position: {x: -10, y: -80, z: -40},
-                quaternion: {x: 0, y: 0, z: 0, w: 1},
+                initPosition: {x: -10, y: -80, z: -40},
+                initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
             {
                 type: 'bludger',
-                position: {x: 10, y: -80, z: -40},
-                quaternion: {x: 0, y: 0, z: 0, w: 1},
+                initPosition: {x: 10, y: -80, z: -40},
+                initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
             {
                 type: 'snitch',
-                position: {x: 0, y: -70, z: -40},
-                quaternion: {x: 0, y: 0, z: 0, w: 1},
+                initPosition: {x: 0, y: -70, z: -40},
+                initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
         ],
-    }
+    };
 };
