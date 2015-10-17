@@ -61,13 +61,11 @@ Scene.prototype.render = function () {
 
 var GameScene = function (container, resizeBind, settings, oninit, onrender) {
     return Scene.call(this, container, resizeBind, function () {
-        this.settings = settings;
-
         // fog
 
         this.fog = new THREE.Fog(
             // color, near, far
-            0xc00080, 2, 2 * this.settings.zone.size
+            0xc00080, 2, 2 * settings.zone.size
         );
 
         // the big sphere
@@ -83,7 +81,7 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
                 side: THREE.BackSide,
             })
         );
-        this.zone.scale.multiplyScalar(this.settings.zone.size);
+        this.zone.scale.multiplyScalar(settings.zone.size);
         this.zone.material.refractionRatio = 0.6;
         this.add(this.zone);
 
@@ -98,16 +96,16 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
 
         // objects
 
-        for (var i in this.settings.players) {
-            this.addObject('player', this.settings.players[i]);
+        for (var i in settings.players) {
+            this.addObject(settings, 'player', settings.players[i]);
         }
 
-        for (var i in this.settings.goals) {
-            this.addObject('goal', this.settings.goals[i]);
+        for (var i in settings.goals) {
+            this.addObject(settings, 'goal', settings.goals[i]);
         }
 
-        for (var i in this.settings.balls) {
-            this.addObject('ball', this.settings.balls[i]);
+        for (var i in settings.balls) {
+            this.addObject(settings, 'ball', settings.balls[i]);
         }
 
         // the handler
@@ -119,7 +117,8 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
         onrender.call(this);
     });
 };
+
 GameScene.prototype = Object.create(Scene.prototype);
 
-GameScene.prototype.addObject = function (mode, instance) {
+GameScene.prototype.addObject = function (settings, mode, instance) {
 };

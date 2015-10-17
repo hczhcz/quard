@@ -57,20 +57,18 @@ World.prototype.simulate = function () {
 
 var GameWorld = function (settings, oninit, onsimulate) {
     World.call(this, function () {
-        this.settings = settings;
-
         // objects
 
-        for (var i in this.settings.players) {
-            this.addObject('player', this.settings.players[i]);
+        for (var i in settings.players) {
+            this.addObject(settings, 'player', settings.players[i]);
         }
 
-        for (var i in this.settings.goals) {
-            this.addObject('goal', this.settings.goals[i]);
+        for (var i in settings.goals) {
+            this.addObject(settings, 'goal', settings.goals[i]);
         }
 
-        for (var i in this.settings.balls) {
-            this.addObject('ball', this.settings.balls[i]);
+        for (var i in settings.balls) {
+            this.addObject(settings, 'ball', settings.balls[i]);
         }
 
         // the handler
@@ -79,12 +77,12 @@ var GameWorld = function (settings, oninit, onsimulate) {
     }, function () {
         // forces
 
-        var gravity = this.settings.zone.gravity / this.settings.zone.size;
-        var limiting1 = -this.settings.zone.limiting1 / Math.pow(
-            this.settings.zone.size - this.settings.zone.inner, 2
+        var gravity = settings.zone.gravity / settings.zone.size;
+        var limiting1 = -settings.zone.limiting1 / Math.pow(
+            settings.zone.size - settings.zone.inner, 2
         );
-        var limiting2 = -this.settings.zone.limiting2 / Math.pow(
-            this.settings.zone.size - this.settings.zone.inner, 2
+        var limiting2 = -settings.zone.limiting2 / Math.pow(
+            settings.zone.size - settings.zone.inner, 2
         );
 
         for (var i in this.bodies) {
@@ -101,14 +99,14 @@ var GameWorld = function (settings, oninit, onsimulate) {
             );
 
             var distance = body.position.length();
-            if (distance > this.settings.zone.inner) {
+            if (distance > settings.zone.inner) {
                 body.force = body.force.vadd(
                     body.position.mult(
                         (
                             body.position.dot(body.velocity) > 0 ?
                             limiting1 : limiting2
                         )
-                        * (distance - this.settings.zone.inner)
+                        * (distance - settings.zone.inner)
                         * body.mass
                     )
                 );
@@ -123,7 +121,7 @@ var GameWorld = function (settings, oninit, onsimulate) {
 
 GameWorld.prototype = Object.create(World.prototype);
 
-GameWorld.prototype.addObject = function (mode, instance) {
+GameWorld.prototype.addObject = function (settings, mode, instance) {
     var body = new CANNON.Body({
         shape: new CANNON.Sphere(1),
     });
@@ -156,16 +154,17 @@ GameWorld.prototype.addObject = function (mode, instance) {
     // set up properties
 
     var world = this;
+    var lastType = undefined;
     Object.defineProperty(body.game, 'type', {
         enumerable: true,
-        get: function () {return body.game._type;},
+        get: function () {return lastType;},
         set: function (value) {
-            var physics = world.settings.physics[value];
+            var physics = settings.physics[value];
 
             body.shapes[0].radius = physics.size; // TODO
             body.mass = physics.mass;
 
-            body.game._type = value;
+            lastType = value;
         }
     });
     Object.defineProperty(body.game, 'position', {
