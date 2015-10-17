@@ -6,11 +6,15 @@ CANNON.Body.prototype.predictPosition = function (delta) {
     return this.position.vadd(this.velocity.mult(delta));
 };
 
-CANNON.Body.prototype.predictRotation = function (delta) {
+CANNON.Body.prototype.getRotation = function () {
     var euler = new CANNON.Vec3(0, 0, 0);
     this.quaternion.toEuler(euler);
 
-    return euler.vadd(this.angularVelocity.mult(delta));
+    return euler;
+};
+
+CANNON.Body.prototype.predictRotation = function (delta) {
+    return this.getRotation().vadd(this.angularVelocity.mult(delta));
 };
 
 // basic physics engine object
