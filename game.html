@@ -18,9 +18,9 @@
     <script src='jquery.min.js'></script>
     <script src='cannon.min.js'></script>
     <script src='three.min.js'></script>
+    <script src='game.mode.js'></script>
     <script src='game.physics.js'></script>
     <script src='game.scene.js'></script>
-    <script src='game.mode.js'></script>
     <script>
         'use strict';
 
@@ -40,9 +40,9 @@
 
             var shape2 = new CANNON.Sphere(1);
             var body2 = new CANNON.Body({
-                mass: 1, material: mat2, shape: shape2
+                mass: 3, material: mat2, shape: shape2
             }); // mass
-            body2.position.set(0, -60, 0);
+            body2.position.set(0.00001, -60, 0);
             body2.collisionFilterGroup = 1;
             body2.collisionFilterMask = 1;
 

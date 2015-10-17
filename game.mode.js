@@ -52,10 +52,9 @@ var testGameMode = function () {
                 stiction: 2, // T^-1
 
                 interaction: {
-                    player: 0, // M * L * T^-2
                     hole: 30, // M * L * T^-2
                     quaffle: 30, // M * L * T^-2
-                    bludger: 20, // M * L * T^-2
+                    bludger: 30, // M * L * T^-2
                     snitch: 10, // M * L * T^-2
                 },
             },
@@ -67,11 +66,10 @@ var testGameMode = function () {
                 stiction: 1, // T^-1
 
                 interaction: {
-                    player: 0, // M * L * T^-2
                     hole: 10, // M * L * T^-2
                     quaffle: 10, // M * L * T^-2
                     bludger: 10, // M * L * T^-2
-                    snitch: 10, // M * L * T^-2
+                    snitch: 5, // M * L * T^-2
                 },
             },
         }
