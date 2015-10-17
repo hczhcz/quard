@@ -60,7 +60,7 @@ Scene.prototype.render = function () {
 // game scene
 
 var GameScene = function (container, resizeBind, settings, oninit, onrender) {
-    return new Scene(container, resizeBind, function () {
+    return Scene.call(this, container, resizeBind, function () {
         this.settings = settings;
 
         // fog
@@ -96,6 +96,20 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
         this.light.position.set(0, 0, 100);
         this.add(this.light);
 
+        // objects
+
+        for (var i in this.settings.players) {
+            this.addObject('player', this.settings.players[i]);
+        }
+
+        for (var i in this.settings.goals) {
+            this.addObject('goal', this.settings.goals[i]);
+        }
+
+        for (var i in this.settings.balls) {
+            this.addObject('ball', this.settings.balls[i]);
+        }
+
         // the handler
 
         oninit.call(this);
@@ -104,4 +118,8 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
 
         onrender.call(this);
     });
+};
+GameScene.prototype = Object.create(Scene.prototype);
+
+GameScene.prototype.addObject = function (mode, instance) {
 };

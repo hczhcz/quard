@@ -117,7 +117,7 @@ var GameWorld = function (settings, oninit, onsimulate) {
     });
 };
 
-GameWorld.prototype = new World(function () {}, function () {});
+GameWorld.prototype = Object.create(World.prototype);
 
 GameWorld.prototype.addObject = function (mode, instance) {
     var physics = this.settings.physics[instance.type];
