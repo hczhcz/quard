@@ -59,6 +59,61 @@ var GameWorld = function (settingGetter, oninit, onsimulate) {
     return new World(function () {
         var settings = settingGetter();
 
+        // objects
+
+        var world = this;
+        var addObject = function (mode, instance) {
+            var physics = settings.physics[instance.type];
+
+            var body = new CANNON.Body({
+                shape: new CANNON.Sphere(physics.size),
+                mass: physics.mass,
+            });
+
+            body.game = {
+                mode: mode,
+                type: instance.type,
+                force: physics.force,
+                stiction: physics.stiction,
+                interaction: physics.interaction,
+            };
+
+            switch (body.game.mode) {
+                case 'player':
+                    break;
+
+                case 'goal':
+                    body.collisionResponse = false;
+                    break;
+
+                case 'ball':
+                    body.wanderDirection = {
+                        x: Math.random(),
+                        y: Math.random(),
+                        z: Math.random(),
+                    };
+                    body.wanderTime = 0;
+                    break;
+
+                default:
+                    throw new Error();
+            }
+
+            world.addBody(body);
+        };
+
+        for (var i in settings.players) {
+            addObject('player', settings.players[i]);
+        }
+
+        for (var i in settings.goals) {
+            addObject('goal', settings.goals[i]);
+        }
+
+        for (var i in settings.balls) {
+            addObject('ball', settings.balls[i]);
+        }
+
         // the handler
 
         oninit.call(this);
@@ -90,8 +145,8 @@ var GameWorld = function (settingGetter, oninit, onsimulate) {
                     body.force = body.force.vadd(
                         body.position.mult(
                             (
-                                body.position.dot(body.velocity) > 0
-                                ? limiting1 : limiting2
+                                body.position.dot(body.velocity) > 0 ?
+                                limiting1 : limiting2
                             )
                             * (distance - settings.zone.inner)
                             * body.mass
