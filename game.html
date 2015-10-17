@@ -24,7 +24,9 @@
     <script>
         'use strict';
 
-        var world = new GameWorld(testGameMode(), function () {
+        var game = testGameMode();
+
+        var world = new GameWorld(game, function () {
             var mat = new CANNON.Material();
             var mat2 = new CANNON.Material();
 
@@ -59,7 +61,7 @@
 
         var scene = new GameScene('body', function (handler) {
             $(window).resize(handler);
-        }, testGameMode(), function () {
+        }, game, function () {
             var geometry = new THREE.SphereGeometry(1, 16, 16);
             var material = new THREE.MeshLambertMaterial({
                 color: 0x808080,

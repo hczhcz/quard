@@ -112,6 +112,18 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
 
         oninit.call(this);
     }, function () {
+        // objects
+
+        for (var i in this.children) {
+            var object = this.children[i];
+
+            if (!object.game) {
+                continue;
+            }
+
+            object.draw();
+        }
+
         // the handler
 
         onrender.call(this);
@@ -121,4 +133,30 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
 GameScene.prototype = Object.create(Scene.prototype);
 
 GameScene.prototype.addObject = function (settings, mode, instance) {
+    var object = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 16, 16),
+        new THREE.MeshLambertMaterial({
+            color: 0x808080, // TODO
+        })
+    );
+
+    object.game = instance;
+
+    var scene = this;
+    var lastType = undefined;
+    object.draw = function () {
+        if (object.game.type != lastType) {
+            var physics = settings.physics[object.game.type];
+
+            object.scale.set(physics.size, physics.size, physics.size);
+            // TODO
+
+            lastType = object.game.type;
+        }
+
+        object.position.copy(object.game.predictedPosition);
+        object.rotation.setFromVector3(object.game.predictedRotation, 'YZX');
+    };
+
+    this.add(object);
 };
