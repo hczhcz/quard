@@ -14,85 +14,102 @@ var testGameMode = function () {
 
         me: 0,
 
-        player: {
-            size: 1, // L
-            mass: 1, // M
+        // inspired by Quidditch in HP :)
+        physics: {
+            // schema: {
+            //     size, mass,
+            //     force?, stiction?, transparent?,
+            //     interaction?: {<type>?, ...},
+            // }
 
-            force: 10, // M * L * T^-2
-            stiction: 0.5, // T^-1
+            player: {
+                size: 1, // L
+                mass: 1, // M
 
-            interaction: {
-                // player: 0, // M * L * T^-2
-                hole: 0, // M * L * T^-2
-                quaffle: 0, // M * L * T^-2
-                bludger: 0, // M * L * T^-2
-                snitch: 0, // M * L * T^-2
+                force: 10, // M * L * T^-2
+                stiction: 0.5, // T^-1
             },
 
-            instances: [
-                [0, -90, 0] // TODO
-            ],
-        },
-        hole: {
-            size: 1, // L
-            mass: 0, // M, not movable
+            hole: {
+                size: 1, // L
+                mass: 0, // M, not movable
 
-            interaction: {
-                player: 0, // M * L * T^-2
-                // hole: 0, // M * L * T^-2
-                quaffle: 0, // M * L * T^-2
-                bludger: 0, // M * L * T^-2
-                snitch: 0, // M * L * T^-2
-            }
+                transparent: true, // no collision
+            },
+
+            quaffle: {
+                size: 1, // L
+                mass: 0.5, // M
+
+                force: 0, // M * L * T^-2
+                stiction: 1, // T^-1
+            },
+            bludger: {
+                size: 0.5, // L
+                mass: 2, // M
+
+                force: 20, // M * L * T^-2
+                stiction: 2, // T^-1
+
+                interaction: {
+                    player: 0, // M * L * T^-2
+                    hole: 30, // M * L * T^-2
+                    quaffle: 30, // M * L * T^-2
+                    bludger: 20, // M * L * T^-2
+                    snitch: 10, // M * L * T^-2
+                },
+            },
+            snitch: {
+                size: 0.2, // L
+                mass: 0.2, // M
+
+                force: 5, // M * L * T^-2
+                stiction: 1, // T^-1
+
+                interaction: {
+                    player: 0, // M * L * T^-2
+                    hole: 10, // M * L * T^-2
+                    quaffle: 10, // M * L * T^-2
+                    bludger: 10, // M * L * T^-2
+                    snitch: 10, // M * L * T^-2
+                },
+            },
         }
 
-        // balls
-        // inspired by Quidditch in HP :)
+        // instances
 
-        quaffle: {
-            size: 1, // L
-            mass: 0.5, // M
+        players: [
+            {
+                type: 'player',
+                position: {x: 0, y: -90, z: 0},
+                quaternion: {x: 0, y: 0, z: 0, w: 1},
+            }, // dummy!
+        ],
 
-            force: 0, // M * L * T^-2
-            stiction: 1, // T^-1
+        goals: [
+            {
+                type: 'hole',
+                position: {x: 0, y: -80, z: -40},
+                quaternion: {x: 0, y: 0, z: 0, w: 1},
+            }, // dummy!
+        ],
 
-            interaction: {
-                player: 0, // M * L * T^-2
-                hole: 0, // M * L * T^-2
-                // quaffle: 0, // M * L * T^-2
-                bludger: 0, // M * L * T^-2
-                snitch: 0, // M * L * T^-2
-            }
-        },
-        bludger: {
-            size: 0.5, // L
-            mass: 2, // M
-
-            force: 20, // M * L * T^-2
-            stiction: 2, // T^-1
-
-            interaction: {
-                player: 0, // M * L * T^-2
-                hole: 30, // M * L * T^-2
-                quaffle: 30, // M * L * T^-2
-                // bludger: 0, // M * L * T^-2
-                snitch: 10, // M * L * T^-2
-            }
-        },
-        snitch: {
-            size: 0.2, // L
-            mass: 0.2, // M
-
-            force: 5, // M * L * T^-2
-            stiction: 1, // T^-1
-
-            interaction: {
-                player: 0, // M * L * T^-2
-                hole: 10, // M * L * T^-2
-                quaffle: 10, // M * L * T^-2
-                bludger: 10, // M * L * T^-2
-                // snitch: 0, // M * L * T^-2
-            }
-        },
+        balls: [
+            {
+                type: 'quaffle',
+                position: {x: -10, y: -80, z: -40},
+                quaternion: {x: 0, y: 0, z: 0, w: 1},
+            }, // dummy!
+            {
+                type: 'bludger',
+                position: {x: 10, y: -80, z: -40},
+                quaternion: {x: 0, y: 0, z: 0, w: 1},
+            }, // dummy!
+            {
+                type: 'snitch',
+                position: {x: 0, y: -70, z: -40},
+                quaternion: {x: 0, y: 0, z: 0, w: 1},
+            }, // dummy!
+        ],
     }
 };
