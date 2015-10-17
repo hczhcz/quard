@@ -99,6 +99,47 @@ var GameWorld = function (settingGetter, oninit, onsimulate) {
                     throw new Error();
             }
 
+            Object.defineProperty(instance, 'position', {
+                enumerable: true,
+                get: function () {return body.position;},
+                set: function (value) {body.position.copy(value);},
+            });
+            Object.defineProperty(instance, 'quaternion', {
+                enumerable: true,
+                get: function () {return body.quaternion;},
+                set: function (value) {body.quaternion.copy(value);},
+            });
+            Object.defineProperty(instance, 'rotation', {
+                enumerable: true,
+                get: function () {return body.getRotation();},
+            });
+            Object.defineProperty(instance, 'velocity', {
+                enumerable: true,
+                get: function () {return body.velocity;},
+                set: function (value) {body.velocity.copy(value);},
+            });
+            Object.defineProperty(instance, 'angularVelocity', {
+                enumerable: true,
+                get: function () {return body.angularVelocity;},
+                set: function (value) {body.angularVelocity.copy(value);},
+            });
+            Object.defineProperty(instance, 'predictedPosition', {
+                enumerable: true,
+                get: function () {
+                    return body.predictPosition(world.timeNow - world.timeSim);
+                },
+            });
+            Object.defineProperty(instance, 'predictedRotation', {
+                enumerable: true,
+                get: function () {
+                    return body.predictRotation(world.timeNow - world.timeSim);
+                },
+            });
+            // TODO: configurable instance.type?
+
+            instance.position = instance.initPosition;
+            instance.quaternion = instance.initQuaternion;
+
             world.addBody(body);
         };
 
