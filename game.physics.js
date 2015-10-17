@@ -123,6 +123,7 @@ GameWorld.prototype = Object.create(World.prototype);
 
 GameWorld.prototype.addObject = function (settings, mode, instance) {
     var body = new CANNON.Body({
+        mass: 1,
         shape: new CANNON.Sphere(1),
     });
 
@@ -161,10 +162,18 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
         set: function (value) {
             var physics = settings.physics[value];
 
-            body.shapes[0].radius = physics.size; // TODO
+            body.shapes[0].radius = physics.size;
             body.mass = physics.mass;
 
             lastType = value;
+
+            // TODO
+            // body.aabbNeedsUpdate = true;
+            // body.computeAABB();
+            body.updateBoundingRadius();
+            // body.updateInertiaWorld();
+            body.updateMassProperties();
+            // body.updateSolveMassProperties();
         }
     });
     Object.defineProperty(body.game, 'position', {
@@ -194,13 +203,17 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
     Object.defineProperty(body.game, 'predictedPosition', {
         enumerable: true,
         get: function () {
-            return body.predictPosition(world.timeNow - world.timeSim);
+            return body.predictPosition(
+                0.001 * (world.timeNow - world.timeSim)
+            );
         },
     });
     Object.defineProperty(body.game, 'predictedRotation', {
         enumerable: true,
         get: function () {
-            return body.predictRotation(world.timeNow - world.timeSim);
+            return body.predictRotation(
+                0.001 * (world.timeNow - world.timeSim)
+            );
         },
     });
 
