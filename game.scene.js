@@ -168,9 +168,7 @@ GameScene.prototype = Object.create(Scene.prototype);
 GameScene.prototype.addObject = function (settings, mode, instance) {
     var object = new THREE.Mesh(
         new THREE.SphereGeometry(1, 16, 16),
-        new THREE.MeshLambertMaterial({
-            color: 0x808080, // TODO
-        })
+        undefined // set later
     );
 
     object.game = instance;
@@ -184,7 +182,17 @@ GameScene.prototype.addObject = function (settings, mode, instance) {
             var physics = settings.physics[object.game.type];
 
             object.scale.set(physics.size, physics.size, physics.size);
-            // TODO
+
+            if (!physics.getDisplayMat) {
+                var material = new THREE.MeshLambertMaterial({
+                    color: 0x808080, // TODO
+                });
+
+                physics.getDisplayMat = function () {
+                    return material;
+                };
+            }
+            object.material = physics.getDisplayMat();
 
             lastType = object.game.type;
         }

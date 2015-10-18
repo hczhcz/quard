@@ -176,7 +176,6 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
     var body = new CANNON.Body({
         mass: 1,
         shape: new CANNON.Sphere(1),
-        material: new CANNON.Material(),
     });
 
     body.game = instance;
@@ -216,8 +215,18 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
 
             body.shapes[0].radius = physics.size;
             body.mass = physics.mass;
-            body.material.friction = physics.friction || 0.3;
-            body.material.restitution = physics.restitution || 1.5;
+
+            if (!physics.getPhysicsMat) {
+                var material = new CANNON.Material();
+
+                material.friction = physics.friction || 0.3;
+                material.restitution = physics.restitution || 1.5;
+
+                physics.getPhysicsMat = function () {
+                    return material;
+                };
+            }
+            body.material = physics.getPhysicsMat();
 
             lastType = value;
 
