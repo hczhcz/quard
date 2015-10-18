@@ -139,6 +139,25 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
             object.draw();
         }
 
+        // camera
+
+        var me = settings.players[settings.me];
+        var meObject = me.getObject();
+
+        var step = 1 - Math.pow(0.995, this.timeNow - this.timeRender);
+
+        this.camera.position.lerp(
+            new THREE.Vector3(0, 0, 5)
+                .applyQuaternion(meObject.quaternion)
+                .add(meObject.position),
+            step
+        );
+
+        this.camera.quaternion.slerp(
+            meObject.quaternion,
+            step
+        );
+
         // the handler
 
         onrender.call(this);
@@ -171,8 +190,12 @@ GameScene.prototype.addObject = function (settings, mode, instance) {
             lastType = object.game.type;
         }
 
-        object.position.copy(object.game.predictedPosition);
-        object.rotation.setFromVector3(object.game.predictedRotation, 'YZX');
+        object.position.copy(
+            object.game.predictedPosition
+        );
+        object.rotation.setFromVector3(
+            object.game.predictedRotation, 'YZX'
+        );
     };
 
     // apply
