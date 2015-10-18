@@ -3,6 +3,11 @@
 // basic 3d scene object
 
 var Scene = function (container, resizeBind, oninit, onrender) {
+    // time management
+
+    this.timeRender = new Date().getTime();
+    this.timeNow = new Date().getTime();
+
     // main camera
 
     this.camera = new THREE.PerspectiveCamera(
@@ -47,8 +52,12 @@ var Scene = function (container, resizeBind, oninit, onrender) {
 Scene.prototype = new THREE.Scene();
 
 Scene.prototype.render = function () {
+    this.timeNow = new Date().getTime();
+
     this.onrender();
     this.renderer.render(this, this.camera);
+
+    this.timeRender = this.timeNow;
 
     var scene = this;
     requestAnimationFrame(function () {
