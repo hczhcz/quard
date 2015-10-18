@@ -133,8 +133,6 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
             );
         }
 
-            body.torque.x = 0.01
-
         // the handler
 
         onsimulate.call(this);

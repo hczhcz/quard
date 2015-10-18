@@ -26,6 +26,27 @@
 
         var game = testGameMode();
 
+        // controlling
+
+        var keyMap = {};
+        var keyAD = 0;
+        var keyWS = 0;
+        var mouseLR = 0;
+        var mouseTB = 0;
+
+        $('body').keydown(function (event) {
+            keyMap[event.which] = true;
+        });
+        $('body').keyup(function (event) {
+            keyMap[event.which] = false;
+        });
+        $('body').mousemove(function (event) {
+            mouseLR = 1 - 2 * event.offsetX / $('body').width();
+            mouseTB = 2 * event.offsetY / $('body').height() - 1;
+        });
+
+        // game
+
         var world = new GameWorld(game, function () {
             var mat = new CANNON.Material();
             var mat2 = new CANNON.Material();
@@ -60,7 +81,33 @@
         }, function () {
             //
         }, function () {
+            if (keyMap['A'.charCodeAt()]) {
+                keyAD = Math.min(keyAD + 0.1, 1);
+            }
+            if (keyMap['W'.charCodeAt()]) {
+                keyWS = Math.min(keyWS + 0.1, 1);
+            }
+            if (keyMap['D'.charCodeAt()]) {
+                keyAD = Math.max(keyAD - 0.1, -1);
+            }
+            if (keyMap['S'.charCodeAt()]) {
+                keyWS = Math.max(keyWS - 0.1, -1);
+            }
+            return {
+                0: {
+                    // up-down
+                    yz: mouseTB,
+                    // left-right
+                    zx: keyAD,
+                    // rolling
+                    xy: mouseLR,
+                    // front-back
+                    force: keyWS,
+                }
+            };
         });
+
+        // scene
 
         var scene = new GameScene('body', function (handler) {
             $(window).resize(handler);

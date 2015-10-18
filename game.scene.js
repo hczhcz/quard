@@ -12,7 +12,7 @@ var Scene = function (container, resizeBind, oninit, onrender) {
 
     this.camera = new THREE.PerspectiveCamera(
         // FOV, aspect, near, far
-        90, 1, 0.1, 1000
+        75, 1, 0.1, 1000
     );
 
     // main canvas
@@ -79,7 +79,7 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
         // the big sphere
 
         this.zone = new THREE.Mesh(
-            new THREE.SphereGeometry(1, 32, 32),
+            new THREE.SphereGeometry(1, 128, 256),
             new THREE.MeshLambertMaterial({
                 // color: 0x808080,
                 envMap: THREE.ImageUtils.loadTextureCube(
@@ -106,7 +106,6 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
             // hex, intensity, distance, decay
             0xffffff, 1, 1000, 1
         );
-        this.light.position.set(0, 0, 100);
         this.add(this.light);
 
         // objects
