@@ -217,11 +217,11 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
         },
     });
 
+    // apply
+
     body.game.getBody = function () {
         return body;
     };
-
-    // apply
 
     body.game.type = body.game.initType;
     body.game.position = body.game.initPosition;

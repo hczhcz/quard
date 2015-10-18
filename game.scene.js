@@ -48,7 +48,6 @@ Scene.prototype = new THREE.Scene();
 
 Scene.prototype.render = function () {
     this.onrender();
-
     this.renderer.render(this, this.camera);
 
     var scene = this;
@@ -75,7 +74,14 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
             new THREE.MeshLambertMaterial({
                 // color: 0x808080,
                 envMap: THREE.ImageUtils.loadTextureCube(
-                    ['background.jpg', 'background.jpg', 'background.jpg', 'background.jpg', 'background.jpg', 'background.jpg'],
+                    [
+                        'background.jpg',
+                        'background.jpg',
+                        'background.jpg',
+                        'background.jpg',
+                        'background.jpg',
+                        'background.jpg'
+                    ],
                     THREE.CubeRefractionMapping
                 ),
                 side: THREE.BackSide,
@@ -142,6 +148,8 @@ GameScene.prototype.addObject = function (settings, mode, instance) {
 
     object.game = instance;
 
+    // drawing
+
     var scene = this;
     var lastType = undefined;
     object.draw = function () {
@@ -156,6 +164,12 @@ GameScene.prototype.addObject = function (settings, mode, instance) {
 
         object.position.copy(object.game.predictedPosition);
         object.rotation.setFromVector3(object.game.predictedRotation, 'YZX');
+    };
+
+    // apply
+
+    object.game.getObject = function () {
+        return object;
     };
 
     this.add(object);
