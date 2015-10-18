@@ -85,16 +85,26 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
             var physics = settings.physics[body.game.type];
 
             // normalize
+
             for (var j in control[i]) {
                 control[i][j] = Math.min(Math.max(control[i][j], -1), 1);
             }
 
             // apply
-            body.torque.set(
-                physics.torque * control[i].yz,
-                physics.torque * control[i].zx,
-                physics.torque * control[i].xy
+
+            body.force = body.force.vadd(
+                body.quaternion.vmult({
+                    x: 0,
+                    y: 0,
+                    z: -physics.force * (0.5 * control[i].force + 0.5),
+                })
             );
+
+            body.torque = body.quaternion.vmult({ // vadd?
+                x: physics.torque * control[i].yz,
+                y: physics.torque * control[i].zx,
+                z: physics.torque * control[i].xy,
+            });
         }
 
         // forces

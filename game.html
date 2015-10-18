@@ -79,28 +79,36 @@
         }, function () {
             //
         }, function () {
-            if (keyMap['A'.charCodeAt()]) {
-                keyAD = Math.min(keyAD + 0.1, 1);
+            var hasA = keyMap['A'.charCodeAt()];
+            var hasD = keyMap['D'.charCodeAt()];
+            var hasW = keyMap['W'.charCodeAt()];
+            var hasS = keyMap['S'.charCodeAt()];
+
+            if (hasA || (!hasD && keyAD < 0)) {
+                keyAD = Math.min(keyAD + 1, 20);
             }
-            if (keyMap['W'.charCodeAt()]) {
-                keyWS = Math.min(keyWS + 0.1, 1);
+            if (hasD || (!hasA && keyAD > 0)) {
+                keyAD = Math.max(keyAD - 1, -20);
             }
-            if (keyMap['D'.charCodeAt()]) {
-                keyAD = Math.max(keyAD - 0.1, -1);
+            if (hasW || (!hasS && keyWS < 0)) {
+                keyWS = Math.min(keyWS + 1, 20);
             }
-            if (keyMap['S'.charCodeAt()]) {
-                keyWS = Math.max(keyWS - 0.1, -1);
+            if (hasS || (!hasW && keyWS > 0)) {
+                keyWS = Math.max(keyWS - 1, -20);
             }
+
+            document.title = 0.05 * keyAD + ' ' + 0.05 * keyWS
+
             return {
                 0: {
                     // up-down
                     yz: mouseTB,
                     // left-right
-                    zx: keyAD,
+                    zx: 0.05 * keyAD,
                     // rolling
                     xy: mouseLR,
                     // front-back
-                    force: keyWS,
+                    force: 0.05 * keyWS,
                 }
             };
         });
