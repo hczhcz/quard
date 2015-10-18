@@ -55,7 +55,6 @@
             var body = new CANNON.Body({
                 mass: 1, material: mat, shape: shape
             }); // mass
-            body.game = 'fake';
 
             this.addBody(body);
             this.testBody = body;
@@ -65,7 +64,6 @@
                 mass: 3, material: mat2, shape: shape2
             }); // mass
             body2.position.set(0.00001, -60, 0);
-            body2.game = 'fake';
 
             this.addBody(body2);
             this.testBody2 = body2;

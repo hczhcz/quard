@@ -75,6 +75,28 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
 
         oninit.call(this);
     }, function () {
+        // controlling
+
+        var control = oncontrol.call(this);
+
+        for (var i in control) {
+            var body = settings.players[i].getBody();
+
+            var physics = settings.physics[body.game.type];
+
+            // normalize
+            for (var j in control[i]) {
+                control[i][j] = Math.min(Math.max(control[i][j], -1), 1);
+            }
+
+            // apply
+            body.torque.set(
+                physics.torque * control[i].yz,
+                physics.torque * control[i].zx,
+                physics.torque * control[i].xy
+            );
+        }
+
         // forces
 
         var gravity = settings.zone.gravity / settings.zone.size;
@@ -92,11 +114,17 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
                 continue;
             }
 
+            var physics = settings.physics[body.game.type];
+
+            // gravity
+
             body.force = body.force.vadd(
                 body.position.mult(
                     gravity * body.mass
                 )
             );
+
+            // limiting
 
             var distance = body.position.length();
             if (distance > settings.zone.inner) {
@@ -111,25 +139,14 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
                     )
                 );
             }
-        }
 
-        // controlling
+            // stiction
 
-        var control = oncontrol.call(this);
-
-        for (var i in control) {
-            var controlBody = settings.players[i].getBody();
-
-            // normalize
-            for (var j in control[i]) {
-                control[i][j] = Math.min(Math.max(control[i][j], -1), 1);
-            }
-
-            // apply
-            controlBody.torque.set(
-                0.1 * control[i].yz,
-                0.1 * control[i].zx,
-                0.1 * control[i].xy
+            body.force = body.force.vadd(
+                body.velocity.mult(-physics.fStiction)
+            );
+            body.torque = body.torque.vadd(
+                body.angularVelocity.mult(-physics.tStiction)
             );
         }
 
