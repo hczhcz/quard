@@ -4,9 +4,9 @@
 var testGameMode = function () {
     return {
         zone: {
-            outer: 110, // L
-            size: 100, // L
-            inner: 90, // L
+            outer: 90, // L
+            size: 60, // L
+            inner: 50, // L
 
             gravity: 5, // L * T^-2
             limiting1: 10, // L * T^-2 * (size / border)
@@ -31,8 +31,8 @@ var testGameMode = function () {
 
                 force: 20, // M * L * T^-2
                 fStiction: 0.5, // T^-1
-                torque: 2, // M * L^2 * T^-2
-                tStiction: 1, // T^-1
+                torque: 5, // M * L^2 * T^-2
+                tStiction: 2, // T^-1
 
                 restitution: 3, // ratio
             },
@@ -51,18 +51,18 @@ var testGameMode = function () {
             },
             bludger: {
                 size: 1, // L
-                mass: 2, // M
+                mass: 3, // M
 
-                force: 20, // M * L * T^-2
+                force: 30, // M * L * T^-2
                 fStiction: 2, // T^-1
 
                 friction: 0.6, // ratio
-                restitution: 5, // ratio
+                restitution: 3, // ratio
 
                 interaction: {
                     hole: 30, // M * L * T^-2
                     quaffle: 30, // M * L * T^-2
-                    bludger: 20, // M * L * T^-2
+                    bludger: 30, // M * L * T^-2
                     snitch: 5, // M * L * T^-2
                 },
             },
@@ -87,7 +87,7 @@ var testGameMode = function () {
         players: [
             {
                 initType: 'player',
-                initPosition: {x: 0, y: -90, z: 0},
+                initPosition: {x: 0, y: -40, z: 0},
                 initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
         ],
@@ -95,7 +95,7 @@ var testGameMode = function () {
         goals: [
             {
                 initType: 'hole',
-                initPosition: {x: 0, y: -80, z: -40},
+                initPosition: {x: -10, y: -30, z: -30},
                 initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
         ],
@@ -103,17 +103,17 @@ var testGameMode = function () {
         balls: [
             {
                 initType: 'quaffle',
-                initPosition: {x: -10, y: -80, z: -40},
+                initPosition: {x: 0, y: -30, z: -30},
                 initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
             {
                 initType: 'bludger',
-                initPosition: {x: 10, y: -80, z: -40},
+                initPosition: {x: 10, y: -30, z: -30},
                 initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
             {
                 initType: 'snitch',
-                initPosition: {x: 0, y: -70, z: -40},
+                initPosition: {x: 0, y: -20, z: -40},
                 initQuaternion: {x: 0, y: 0, z: 0, w: 1},
             }, // dummy!
         ],

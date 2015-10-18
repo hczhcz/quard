@@ -63,7 +63,7 @@
             var body2 = new CANNON.Body({
                 mass: 3, material: mat2, shape: shape2
             }); // mass
-            body2.position.set(0.00001, -60, 0);
+            body2.position.set(0.00001, -30, 0);
 
             this.addBody(body2);
             this.testBody2 = body2;
@@ -132,27 +132,6 @@
 
             this.add(object2);
             this.testObject2 = object2;
-
-            ///
-
-            var spotLight = new THREE.SpotLight(0xffffff);
-            spotLight.position.set(0, -90, 20);
-
-            // spotLight.castShadow = true;
-
-            // spotLight.shadowMapWidth = 1024;
-            // spotLight.shadowMapHeight = 1024;
-
-            // spotLight.shadowCameraNear = 500;
-            // spotLight.shadowCameraFar = 4000;
-            // spotLight.shadowCameraFov = 30;
-
-            this.add(spotLight);
-
-            ///
-
-            this.camera.position.set(0, -90, 20);
-            // this.camera.position.set(0, 0, 5);
         }, function () {
             world.simulate();
 
