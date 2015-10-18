@@ -55,7 +55,7 @@ World.prototype.simulate = function () {
 
 // game world
 
-var GameWorld = function (settings, oninit, onsimulate) {
+var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
     World.call(this, function () {
         // objects
 
@@ -112,6 +112,28 @@ var GameWorld = function (settings, oninit, onsimulate) {
                 );
             }
         }
+
+        // controlling
+
+        var control = oncontrol.call(this);
+
+        for (var i in control) {
+            var controlBody = settings.players[i].getBody();
+
+            // normalize
+            for (var j in control[i]) {
+                control[i][j] = Math.min(Math.max(control[i][j], -1), 1);
+            }
+
+            // apply
+            controlBody.torque.set(
+                0.1 * control[i].yz,
+                0.1 * control[i].zx,
+                0.1 * control[i].xy
+            );
+        }
+
+            body.torque.x = 0.01
 
         // the handler
 
