@@ -18,7 +18,8 @@ var testGameMode = function () {
         physics: {
             // schema: {
             //     size, mass,
-            //     force?, stiction?,
+            //     force?, fStiction?,
+            //     torque?, tStiction?,
             //     interaction?: {<type>?, ...},
             // }
 
@@ -27,7 +28,9 @@ var testGameMode = function () {
                 mass: 1, // M
 
                 force: 10, // M * L * T^-2
-                stiction: 0.5, // T^-1
+                fStiction: 0.5, // T^-1
+                torque: 1, // M * L^2 * T^-2
+                tStiction: 1, // T^-1
             },
 
             hole: {
@@ -40,14 +43,14 @@ var testGameMode = function () {
                 mass: 0.5, // M
 
                 force: 0, // M * L * T^-2
-                stiction: 1, // T^-1
+                fStiction: 1, // T^-1
             },
             bludger: {
                 size: 0.5, // L
                 mass: 2, // M
 
                 force: 20, // M * L * T^-2
-                stiction: 2, // T^-1
+                fStiction: 2, // T^-1
 
                 interaction: {
                     hole: 30, // M * L * T^-2
@@ -61,7 +64,7 @@ var testGameMode = function () {
                 mass: 0.2, // M
 
                 force: 5, // M * L * T^-2
-                stiction: 1, // T^-1
+                fStiction: 1, // T^-1
 
                 interaction: {
                     hole: 10, // M * L * T^-2
