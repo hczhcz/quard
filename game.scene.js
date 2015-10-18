@@ -73,7 +73,7 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
 
         this.fog = new THREE.Fog(
             // color, near, far
-            0xc00080, 2, 2 * settings.zone.size
+            0xc00080, 2, 2 * settings.zone.outer
         );
 
         // the big sphere

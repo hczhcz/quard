@@ -4,13 +4,13 @@
 var testGameMode = function () {
     return {
         zone: {
+            outer: 110, // L
             size: 100, // L
             inner: 90, // L
 
             gravity: 5, // L * T^-2
             limiting1: 10, // L * T^-2 * (size / border)
             limiting2: 5, // L * T^-2 * (size / border)
-            restitution: 5, // ratio
         },
 
         me: 0,
@@ -21,6 +21,7 @@ var testGameMode = function () {
             //     size, mass,
             //     force?, fStiction?,
             //     torque?, tStiction?,
+            //     friction?, restitution?,
             //     interaction?: {<type>?, ...},
             // }
 
@@ -32,6 +33,8 @@ var testGameMode = function () {
                 fStiction: 0.5, // T^-1
                 torque: 2, // M * L^2 * T^-2
                 tStiction: 1, // T^-1
+
+                restitution: 3, // ratio
             },
 
             hole: {
@@ -52,6 +55,9 @@ var testGameMode = function () {
 
                 force: 20, // M * L * T^-2
                 fStiction: 2, // T^-1
+
+                friction: 0.6, // ratio
+                restitution: 5, // ratio
 
                 interaction: {
                     hole: 30, // M * L * T^-2
