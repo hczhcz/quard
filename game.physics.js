@@ -152,12 +152,16 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
 
             // stiction
 
-            body.force = body.force.vadd(
-                body.velocity.mult(-physics.fStiction)
-            );
-            body.torque = body.torque.vadd(
-                body.angularVelocity.mult(-physics.tStiction)
-            );
+            if (physics.fStiction) {
+                body.force = body.force.vadd(
+                    body.velocity.mult(-physics.fStiction)
+                );
+            }
+            if (physics.tStiction) {
+                body.torque = body.torque.vadd(
+                    body.angularVelocity.mult(-physics.tStiction)
+                );
+            }
         }
 
         // the handler

@@ -5,11 +5,12 @@ var testGameMode = function () {
     return {
         zone: {
             size: 100, // L
-            inner: 95, // L
+            inner: 90, // L
 
             gravity: 5, // L * T^-2
             limiting1: 10, // L * T^-2 * (size / border)
             limiting2: 5, // L * T^-2 * (size / border)
+            restitution: 5, // ratio
         },
 
         me: 0,
@@ -24,29 +25,29 @@ var testGameMode = function () {
             // }
 
             player: {
-                size: 1, // L
-                mass: 1, // M
+                size: 2, // L
+                mass: 2, // M
 
-                force: 10, // M * L * T^-2
+                force: 20, // M * L * T^-2
                 fStiction: 0.5, // T^-1
-                torque: 1, // M * L^2 * T^-2
+                torque: 2, // M * L^2 * T^-2
                 tStiction: 1, // T^-1
             },
 
             hole: {
-                size: 1, // L
+                size: 2, // L
                 mass: 0, // M, not movable
             },
 
             quaffle: {
-                size: 1, // L
+                size: 2, // L
                 mass: 0.5, // M
 
                 force: 0, // M * L * T^-2
-                fStiction: 1, // T^-1
+                fStiction: 0.25, // T^-1
             },
             bludger: {
-                size: 0.5, // L
+                size: 1, // L
                 mass: 2, // M
 
                 force: 20, // M * L * T^-2
@@ -55,22 +56,22 @@ var testGameMode = function () {
                 interaction: {
                     hole: 30, // M * L * T^-2
                     quaffle: 30, // M * L * T^-2
-                    bludger: 30, // M * L * T^-2
-                    snitch: 10, // M * L * T^-2
+                    bludger: 20, // M * L * T^-2
+                    snitch: 5, // M * L * T^-2
                 },
             },
             snitch: {
-                size: 0.2, // L
+                size: 0.5, // L
                 mass: 0.2, // M
 
-                force: 5, // M * L * T^-2
-                fStiction: 1, // T^-1
+                force: 1, // M * L * T^-2
+                fStiction: 0.25, // T^-1
 
                 interaction: {
-                    hole: 10, // M * L * T^-2
-                    quaffle: 10, // M * L * T^-2
-                    bludger: 10, // M * L * T^-2
-                    snitch: 5, // M * L * T^-2
+                    hole: 5, // M * L * T^-2
+                    quaffle: 5, // M * L * T^-2
+                    bludger: 5, // M * L * T^-2
+                    snitch: 2, // M * L * T^-2
                 },
             },
         },
