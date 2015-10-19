@@ -1,9 +1,16 @@
 'use strict';
 
+var doPrediction = false;
+var defaultStep = 1000 / 60;
+
 // CANNON.Body extensions
 
 CANNON.Body.prototype.predictPosition = function (delta) {
-    return this.position.vadd(this.velocity.mult(delta));
+    if (doPrediction) {
+        return this.position.vadd(this.velocity.mult(delta));
+    } else {
+        return this.position;
+    }
 };
 
 CANNON.Body.prototype.getRotation = function () {
@@ -14,7 +21,11 @@ CANNON.Body.prototype.getRotation = function () {
 };
 
 CANNON.Body.prototype.predictRotation = function (delta) {
-    return this.getRotation().vadd(this.angularVelocity.mult(delta));
+    if (doPrediction) {
+        return this.getRotation().vadd(this.angularVelocity.mult(delta));
+    } else {
+        return this.getRotation();
+    }
 };
 
 // basic physics engine object
@@ -22,7 +33,7 @@ CANNON.Body.prototype.predictRotation = function (delta) {
 var World = function (oninit, onsimulate) {
     // time management
 
-    this.timeStep = 1000 / 60;
+    this.timeStep = defaultStep;
     this.timeSim = new Date().getTime();
     this.timeNow = new Date().getTime();
 
