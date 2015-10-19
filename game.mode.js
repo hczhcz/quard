@@ -2,10 +2,10 @@
 
 // TODO: dummy
 var testGameMode = function () {
-    return {
+    var settings = {
         zone: {
-            size: 60, // L
-            inner: 55, // L
+            size: 100, // L
+            inner: 95, // L
 
             gravity: 5, // L * T^-2
             limiting1: 40, // L * T^-2 * (size / border)
@@ -83,38 +83,65 @@ var testGameMode = function () {
 
         // instances
 
-        players: [
-            {
-                initType: 'player',
-                initPosition: {x: 0, y: -40, z: 0},
-                initQuaternion: {x: 0, y: 0, z: 0, w: 1},
-            }, // dummy!
-        ],
-
-        goals: [
-            {
-                initType: 'hole',
-                initPosition: {x: -10, y: -30, z: -30},
-                initQuaternion: {x: 0, y: 0, z: 0, w: 1},
-            }, // dummy!
-        ],
-
-        balls: [
-            {
-                initType: 'quaffle',
-                initPosition: {x: 0, y: -30, z: -30},
-                initQuaternion: {x: 0, y: 0, z: 0, w: 1},
-            }, // dummy!
-            {
-                initType: 'bludger',
-                initPosition: {x: 10, y: -30, z: -30},
-                initQuaternion: {x: 0, y: 0, z: 0, w: 1},
-            }, // dummy!
-            {
-                initType: 'snitch',
-                initPosition: {x: 0, y: -20, z: -40},
-                initQuaternion: {x: 0, y: 0, z: 0, w: 1},
-            }, // dummy!
-        ],
+        players: [],
+        goals: [],
+        balls: [],
     };
+
+    var randomQuat = function () {
+        // TODO: not uniform random
+        var result = new CANNON.Quaternion(
+            Math.random() - 0.5, Math.random() - 0.5,
+            Math.random() - 0.5, Math.random() - 0.5
+        );
+        result.normalize();
+        return result;
+    };
+
+    var basePosition = {
+        x: 0,
+        y: -settings.zone.inner,
+        z: 0,
+    };
+
+    for (var i = 0; i < 6; ++i) {
+        settings.goals.push({
+            initType: 'hole',
+            initPosition: randomQuat().vmult(basePosition),
+            initQuaternion: randomQuat(),
+        });
+
+        settings.balls.push({
+            initType: 'quaffle',
+            initPosition: randomQuat().vmult(basePosition),
+            initQuaternion: randomQuat(),
+        });
+
+        settings.balls.push({
+            initType: 'bludger',
+            initPosition: randomQuat().vmult(basePosition),
+            initQuaternion: randomQuat(),
+        });
+    }
+
+    var playerQuat = randomQuat();
+    settings.players.push({
+        initType: 'player',
+        initPosition: playerQuat.vmult(basePosition),
+        initQuaternion: playerQuat,
+    });
+
+    settings.goals.push({
+        initType: 'hole',
+        initPosition: {x: 0, y: 0, z: 0},
+        initQuaternion: randomQuat(),
+    });
+
+    settings.balls.push({
+        initType: 'snitch',
+        initPosition: randomQuat().vmult(basePosition),
+        initQuaternion: randomQuat(),
+    });
+
+    return settings;
 };
