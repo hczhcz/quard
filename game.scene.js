@@ -146,7 +146,7 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
         var step = 1 - Math.pow(0.995, this.timeNow - this.timeRender);
 
         this.camera.position.lerp(
-            new THREE.Vector3(0, 0, 10)
+            new THREE.Vector3(0, 1, 10)
                 .applyQuaternion(meObject.quaternion)
                 .add(meObject.position),
             step
