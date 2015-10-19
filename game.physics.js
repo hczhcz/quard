@@ -82,41 +82,17 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
             this.addObject(settings, 'ball', settings.balls[i]);
         }
 
-        // the handler
+        // handler
+
+        this.oncontrol = oncontrol;
+
+        // call handler
 
         oninit.call(this);
     }, function () {
-        // controlling
+        // apply controlling
 
-        var control = oncontrol.call(this);
-
-        for (var i in control) {
-            var body = settings.players[i].getBody();
-
-            var physics = settings.physics[body.game.type];
-
-            // normalize
-
-            for (var j in control[i]) {
-                control[i][j] = Math.min(Math.max(control[i][j], -1), 1);
-            }
-
-            // apply
-
-            body.force = body.force.vadd(
-                body.quaternion.vmult({
-                    x: 0,
-                    y: 0,
-                    z: -physics.force * (0.6 * control[i].force + 0.4),
-                })
-            );
-
-            body.torque = body.quaternion.vmult({ // vadd?
-                x: physics.torque * control[i].yz,
-                y: physics.torque * control[i].zx,
-                z: physics.torque * control[i].xy,
-            });
-        }
+        this.controlPlayers(settings);
 
         // forces
 
@@ -211,7 +187,7 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
             }
         }
 
-        // the handler
+        // call handler
 
         onsimulate.call(this);
     });
@@ -224,8 +200,6 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
         mass: 1,
         shape: new CANNON.Sphere(1),
     });
-
-    body.game = instance;
 
     // apply mode
 
@@ -254,7 +228,7 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
 
     var world = this;
     var lastType = undefined;
-    Object.defineProperty(body.game, 'type', {
+    Object.defineProperty(instance, 'type', {
         enumerable: true,
         get: function () {return lastType;},
         set: function (value) {
@@ -286,27 +260,27 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
             // body.updateSolveMassProperties();
         }
     });
-    Object.defineProperty(body.game, 'position', {
+    Object.defineProperty(instance, 'position', {
         enumerable: true,
         get: function () {return body.position;},
         set: function (value) {body.position.copy(value);},
     });
-    Object.defineProperty(body.game, 'quaternion', {
+    Object.defineProperty(instance, 'quaternion', {
         enumerable: true,
         get: function () {return body.quaternion;},
         set: function (value) {body.quaternion.copy(value);},
     });
-    Object.defineProperty(body.game, 'velocity', {
+    Object.defineProperty(instance, 'velocity', {
         enumerable: true,
         get: function () {return body.velocity;},
         set: function (value) {body.velocity.copy(value);},
     });
-    Object.defineProperty(body.game, 'angularVelocity', {
+    Object.defineProperty(instance, 'angularVelocity', {
         enumerable: true,
         get: function () {return body.angularVelocity;},
         set: function (value) {body.angularVelocity.copy(value);},
     });
-    Object.defineProperty(body.game, 'predictedPosition', {
+    Object.defineProperty(instance, 'predictedPosition', {
         enumerable: true,
         get: function () {
             return body.predictPosition(
@@ -314,7 +288,7 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
             );
         },
     });
-    Object.defineProperty(body.game, 'predictedRotation', {
+    Object.defineProperty(instance, 'predictedRotation', {
         enumerable: true,
         get: function () {
             return body.predictRotation(
@@ -325,13 +299,50 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
 
     // apply
 
-    body.game.getBody = function () {
+    instance.getBody = function () {
         return body;
     };
 
-    body.game.type = body.game.initType;
-    body.game.position = body.game.initPosition;
-    body.game.quaternion = body.game.initQuaternion;
+    instance.type = instance.initType;
+    instance.position = instance.initPosition;
+    instance.quaternion = instance.initQuaternion;
+
+    body.game = instance;
 
     this.addBody(body);
+};
+
+GameWorld.prototype.controlPlayer = function (settings, input, instance) {
+    var body = instance.getBody();
+    var physics = settings.physics[instance.type];
+
+    // normalize
+
+    for (var i in input) {
+        input[i] = Math.min(Math.max(input[i], -1), 1);
+    }
+
+    // apply
+
+    body.force = body.force.vadd(
+        body.quaternion.vmult({
+            x: 0,
+            y: 0,
+            z: -physics.force * (0.6 * input.force + 0.4),
+        })
+    );
+
+    body.torque = body.quaternion.vmult({ // vadd?
+        x: physics.torque * input.yz,
+        y: physics.torque * input.zx,
+        z: physics.torque * input.xy,
+    });
+};
+
+GameWorld.prototype.controlPlayers = function (settings) {
+    var inputs = this.oncontrol();
+
+    for (var i in inputs) {
+        this.controlPlayer(settings, inputs[i], settings.players[i]);
+    }
 };

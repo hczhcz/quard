@@ -141,49 +141,16 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
             this.addObject(settings, 'ball', settings.balls[i]);
         }
 
-        // the handler
+        // call handler
 
         oninit.call(this);
     }, function () {
-        // objects
+        // do rendering
 
-        for (var i in this.children) {
-            var object = this.children[i];
+        this.renderObjects();
+        this.renderPlayerView(settings.players[settings.me]);
 
-            if (!object.game) {
-                continue;
-            }
-
-            object.draw();
-        }
-
-        // camera
-
-        var me = settings.players[settings.me];
-        var meObject = me.getObject();
-
-        var step = 1 - Math.pow(0.995, this.timeNow - this.timeRender);
-
-        this.camera.position.lerp(
-            new THREE.Vector3(0, 1, 10)
-                .applyQuaternion(meObject.quaternion)
-                .add(meObject.position),
-            step
-        );
-
-        this.camera.quaternion.slerp(
-            meObject.quaternion,
-            step
-        );
-
-        this.camLight.position.copy(
-            new THREE.Vector3(0, 0, 1)
-                .applyQuaternion(meObject.quaternion)
-                .add(meObject.position)
-        );
-        this.camLight.target = meObject;
-
-        // the handler
+        // call handler
 
         onrender.call(this);
     });
@@ -197,22 +164,20 @@ GameScene.prototype.addObject = function (settings, mode, instance) {
         undefined // set later
     );
 
-    object.game = instance;
-
     // drawing
 
     var scene = this;
     var lastType = undefined;
-    object.draw = function () {
-        if (object.game.type != lastType) {
-            var physics = settings.physics[object.game.type];
+    object.drawType = function () { // TODO: move this to renderObject
+        if (instance.type != lastType) {
+            var physics = settings.physics[instance.type];
 
             object.scale.set(physics.size, physics.size, physics.size);
 
             if (!physics.getDisplayMat) {
                 var material;
 
-                switch (object.game.type) {
+                switch (instance.type) {
                     case 'player':
                         material = new THREE.MeshLambertMaterial({
                             color: 0x202020,
@@ -268,22 +233,64 @@ GameScene.prototype.addObject = function (settings, mode, instance) {
             }
             object.material = physics.getDisplayMat();
 
-            lastType = object.game.type;
+            lastType = instance.type;
         }
-
-        object.position.copy(
-            object.game.predictedPosition
-        );
-        object.rotation.setFromVector3(
-            object.game.predictedRotation, 'YZX'
-        );
     };
 
     // apply
 
-    object.game.getObject = function () {
+    instance.getObject = function () {
         return object;
     };
 
+    object.game = instance;
+
     this.add(object);
 };
+
+GameScene.prototype.renderObject = function (object, instance) {
+    object.drawType(); // TODO
+
+    object.position.copy(
+        instance.predictedPosition
+    );
+    object.rotation.setFromVector3(
+        instance.predictedRotation, 'YZX'
+    );
+};
+
+GameScene.prototype.renderObjects = function () {
+    for (var i in this.children) {
+        var object = this.children[i];
+
+        if (!object.game) {
+            continue;
+        }
+
+        this.renderObject(object, object.game);
+    }
+};
+
+GameScene.prototype.renderPlayerView = function (me) {
+    var object = me.getObject();
+    var step = 1 - Math.pow(0.995, this.timeNow - this.timeRender);
+
+    this.camera.position.lerp(
+        new THREE.Vector3(0, 1, 10)
+            .applyQuaternion(object.quaternion)
+            .add(object.position),
+        step
+    );
+    this.camera.quaternion.slerp(
+        object.quaternion,
+        step
+    );
+
+    this.camLight.position.copy(
+        new THREE.Vector3(0, 0, 1)
+            .applyQuaternion(object.quaternion)
+            .add(object.position)
+    );
+    this.camLight.target = object;
+};
+
