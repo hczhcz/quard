@@ -73,13 +73,13 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
 
         this.fog = new THREE.Fog(
             // color, near, far
-            0xc00080, 2, 2 * settings.zone.outer
+            0xc00080, 2, 2 * settings.zone.size
         );
 
         // the big sphere
 
         this.zone = new THREE.Mesh(
-            new THREE.SphereGeometry(1, 128, 256),
+            new THREE.SphereGeometry(1, 128, 128),
             new THREE.MeshLambertMaterial({
                 // color: 0x808080,
                 envMap: THREE.ImageUtils.loadTextureCube(
@@ -96,9 +96,22 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
                 side: THREE.BackSide,
             })
         );
-        this.zone.scale.multiplyScalar(settings.zone.outer);
+        this.zone.scale.multiplyScalar(settings.zone.size);
         this.zone.material.refractionRatio = 0.6;
         this.add(this.zone);
+
+        this.zoneInner = new THREE.Mesh(
+            new THREE.SphereGeometry(1, 64, 64),
+            new THREE.MeshLambertMaterial({
+                color: 0x808080,
+                transparent: true,
+                opacity: 0.1,
+                wireframe: true,
+                side: THREE.DoubleSide,
+            })
+        );
+        this.zoneInner.scale.multiplyScalar(settings.zone.inner);
+        this.add(this.zoneInner);
 
         // lights
 

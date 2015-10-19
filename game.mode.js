@@ -4,9 +4,8 @@
 var testGameMode = function () {
     return {
         zone: {
-            outer: 60, // L
-            size: 55, // L
-            inner: 50, // L
+            size: 60, // L
+            inner: 55, // L
 
             gravity: 5, // L * T^-2
             limiting1: 20, // L * T^-2 * (size / border)
