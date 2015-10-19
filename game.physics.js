@@ -107,7 +107,7 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
                 body.quaternion.vmult({
                     x: 0,
                     y: 0,
-                    z: -physics.force * (0.5 * control[i].force + 0.5),
+                    z: -physics.force * (0.6 * control[i].force + 0.4),
                 })
             );
 
@@ -171,14 +171,43 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
             // stiction
 
             if (physics.fStiction) {
-                body.force = body.force.vadd(
-                    body.velocity.mult(-physics.fStiction)
+                body.force = body.force.vsub(
+                    body.velocity.mult(physics.fStiction)
                 );
             }
             if (physics.tStiction) {
-                body.torque = body.torque.vadd(
-                    body.angularVelocity.mult(-physics.tStiction)
+                body.torque = body.torque.vsub(
+                    body.angularVelocity.mult(physics.tStiction)
                 );
+            }
+
+            // interaction
+
+            if (physics.interaction) {
+                for (var j in this.bodies) {
+                    if (i == j) {
+                        continue;
+                    }
+
+                    var body2 = this.bodies[j];
+
+                    if (!body2.game) {
+                        continue;
+                    }
+
+                    if (physics.interaction[body.game.type]) {
+                        var physics2 = settings.physics[body2.game.type];
+                        var vDistance = body.position.vsub(body2.position);
+
+                        body.force = body.force.vadd(
+                            vDistance.mult(
+                                physics.interaction[body.game.type]
+                                * Math.pow(physics.size + physics2.size, 2)
+                                * Math.pow(vDistance.length(), -3)
+                            )
+                        );
+                    }
+                }
             }
         }
 
