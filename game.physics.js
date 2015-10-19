@@ -139,9 +139,16 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
 
             // gravity
 
-            body.force = body.force.vadd(
+            body.applyForce(
                 body.position.mult(
                     gravity * body.mass
+                ),
+                body.position.vadd(
+                    body.quaternion.vmult({
+                        x: 0,
+                        y: -0.05 * physics.size,
+                        z: 0,
+                    })
                 )
             );
 
@@ -149,7 +156,7 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
 
             var distance = body.position.length();
             if (distance > settings.zone.inner) {
-                body.force = body.force.vadd(
+                body.applyForce(
                     body.position.mult(
                         (
                             body.position.dot(body.velocity) > 0 ?
@@ -157,6 +164,13 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
                         )
                         * (distance - settings.zone.inner)
                         * body.mass
+                    ),
+                    body.position.vadd(
+                        body.quaternion.vmult({
+                            x: 0,
+                            y: 0.01 * physics.size,
+                            z: 0,
+                        })
                     )
                 );
             }
