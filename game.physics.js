@@ -139,16 +139,9 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
 
             // gravity
 
-            body.applyForce(
+            body.force = body.force.vadd(
                 body.position.mult(
                     gravity * body.mass
-                ),
-                body.position.vadd(
-                    body.quaternion.vmult({
-                        x: 0,
-                        y: -0.05 * physics.size,
-                        z: 0,
-                    })
                 )
             );
 
@@ -168,7 +161,7 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
                     body.position.vadd(
                         body.quaternion.vmult({
                             x: 0,
-                            y: 0.01 * physics.size,
+                            y: 0.2 * physics.size,
                             z: 0,
                         })
                     )
