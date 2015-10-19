@@ -104,9 +104,15 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
 
         this.light = new THREE.PointLight(
             // hex, intensity, distance, decay
-            0xffffff, 1, 1000, 1
+            0xffffff, 0.5, 1000, 1
         );
         this.add(this.light);
+
+        this.camLight = new THREE.SpotLight(
+            // hex, intensity, distance, angle, exponent, decay
+            0xffffff, 3, 1000, 1, 50, 1
+        );
+        this.add(this.camLight);
 
         // objects
 
@@ -156,6 +162,13 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
             meObject.quaternion,
             step
         );
+
+        this.camLight.position.copy(
+            new THREE.Vector3(0, 0, 1)
+                .applyQuaternion(meObject.quaternion)
+                .add(meObject.position)
+        );
+        this.camLight.target = meObject;
 
         // the handler
 
