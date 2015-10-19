@@ -96,11 +96,11 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
                 side: THREE.BackSide,
             })
         );
-        this.zone.scale.multiplyScalar(settings.zone.size);
+        this.zone.scale.multiplyScalar(settings.zone.outer);
         this.zone.material.refractionRatio = 0.6;
         this.add(this.zone);
 
-        // light // TODO
+        // lights
 
         this.light = new THREE.PointLight(
             // hex, intensity, distance, decay
@@ -167,7 +167,7 @@ GameScene.prototype = Object.create(Scene.prototype);
 
 GameScene.prototype.addObject = function (settings, mode, instance) {
     var object = new THREE.Mesh(
-        new THREE.SphereGeometry(1, 16, 16),
+        new THREE.SphereGeometry(1, 32, 32),
         undefined // set later
     );
 

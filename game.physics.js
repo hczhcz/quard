@@ -249,10 +249,6 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
         get: function () {return body.quaternion;},
         set: function (value) {body.quaternion.copy(value);},
     });
-    // Object.defineProperty(body.game, 'rotation', {
-    //     enumerable: true,
-    //     get: function () {return body.getRotation();},
-    // });
     Object.defineProperty(body.game, 'velocity', {
         enumerable: true,
         get: function () {return body.velocity;},
