@@ -184,9 +184,57 @@ GameScene.prototype.addObject = function (settings, mode, instance) {
             object.scale.set(physics.size, physics.size, physics.size);
 
             if (!physics.getDisplayMat) {
-                var material = new THREE.MeshLambertMaterial({
-                    color: 0x808080, // TODO
-                });
+                var material;
+
+                switch (object.game.type) {
+                    case 'player':
+                        material = new THREE.MeshLambertMaterial({
+                            color: 0x202020,
+                            transparent: true,
+                            opacity: 0.8,
+                        });
+                        break;
+
+                    case 'hole':
+                        material = new THREE.MeshBasicMaterial({
+                            // color: 0x4000ff,
+                            transparent: true,
+                            opacity: 0.8,
+                            envMap: THREE.ImageUtils.loadTextureCube(
+                                [
+                                    'background.jpg',
+                                    'background.jpg',
+                                    'background.jpg',
+                                    'background.jpg',
+                                    'background.jpg',
+                                    'background.jpg'
+                                ],
+                                THREE.CubeRefractionMapping
+                            ),
+                        });
+                        break;
+
+                    case 'quaffle':
+                        material = new THREE.MeshLambertMaterial({
+                            color: 0xc0c0c0,
+                        });
+                        break;
+
+                    case 'bludger':
+                        material = new THREE.MeshPhongMaterial({
+                            color: 0x000000,
+                        });
+                        break;
+
+                    case 'snitch':
+                        material = new THREE.MeshPhongMaterial({
+                            color: 0xffc020,
+                        });
+                        break;
+
+                    default:
+                        throw new Error();
+                }
 
                 physics.getDisplayMat = function () {
                     return material;
