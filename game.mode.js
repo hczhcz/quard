@@ -105,6 +105,19 @@ var testGameMode = function () {
         z: 0,
     };
 
+    var playerQuat = randomQuat();
+    settings.players.push({
+        initType: 'player',
+        initPosition: playerQuat.vmult(basePosition),
+        initQuaternion: playerQuat,
+    });
+
+    settings.goals.push({
+        initType: 'hole',
+        initPosition: {x: 0, y: 0, z: 0},
+        initQuaternion: randomQuat(),
+    });
+
     for (var i = 0; i < 6; ++i) {
         settings.goals.push({
             initType: 'hole',
@@ -124,19 +137,6 @@ var testGameMode = function () {
             initQuaternion: randomQuat(),
         });
     }
-
-    var playerQuat = randomQuat();
-    settings.players.push({
-        initType: 'player',
-        initPosition: playerQuat.vmult(basePosition),
-        initQuaternion: playerQuat,
-    });
-
-    settings.goals.push({
-        initType: 'hole',
-        initPosition: {x: 0, y: 0, z: 0},
-        initQuaternion: randomQuat(),
-    });
 
     settings.balls.push({
         initType: 'snitch',

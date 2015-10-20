@@ -308,9 +308,8 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
     this.addBody(body);
 };
 
-GameWorld.prototype.controlPlayer = function (settings, input, instance) {
+GameWorld.prototype.controlPlayer = function (input, physics, instance) {
     var body = instance.getBody();
-    var physics = settings.physics[instance.type];
 
     // normalize
 
@@ -339,7 +338,13 @@ GameWorld.prototype.controlPlayers = function (settings) {
     var inputs = this.oncontrol();
 
     for (var i in inputs) {
-        this.controlPlayer(settings, inputs[i], settings.players[i]);
+        var instance = settings.players[i];
+
+        this.controlPlayer(
+            inputs[i],
+            settings.physics[instance.type],
+            instance
+        );
     }
 };
 
