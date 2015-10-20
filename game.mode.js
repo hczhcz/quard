@@ -17,7 +17,7 @@ var testGameMode = function () {
         // inspired by Quidditch in HP :)
         physics: {
             // schema: {
-            //     size, mass,
+            //     size, mass, gravity?,
             //     force?, fStiction?,
             //     torque?, tStiction?,
             //     friction?, restitution?,
@@ -51,6 +51,7 @@ var testGameMode = function () {
             bludger: {
                 size: 1, // L
                 mass: 3, // M
+                gravity: 0.5, // ratio
 
                 force: 30, // M * L * T^-2
                 fStiction: 2, // T^-1
@@ -68,6 +69,7 @@ var testGameMode = function () {
             snitch: {
                 size: 0.5, // L
                 mass: 0.2, // M
+                gravity: -2.5, // ratio
 
                 force: 1, // M * L * T^-2
                 fStiction: 0.25, // T^-1

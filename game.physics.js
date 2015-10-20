@@ -90,7 +90,7 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
 
         oninit.call(this);
     }, function () {
-        // apply controlling
+        // controlling
 
         this.controlPlayers(settings);
 
@@ -117,7 +117,7 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
 
             body.force = body.force.vadd(
                 body.position.mult(
-                    gravity * body.mass
+                    gravity * (physics.gravity || 1) * physics.mass
                 )
             );
 
@@ -132,7 +132,7 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
                             limiting1 : limiting2
                         )
                         * (distance - settings.zone.inner)
-                        * body.mass
+                        * physics.mass
                     ),
                     body.position.vadd(
                         body.quaternion.vmult({
