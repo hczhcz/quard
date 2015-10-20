@@ -45,7 +45,6 @@ var testGameMode = function () {
                 size: 2, // L
                 mass: 0.5, // M
 
-                force: 0, // M * L * T^-2
                 fStiction: 0.25, // T^-1
             },
             bludger: {

@@ -93,6 +93,7 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
         // controlling
 
         this.controlPlayers(settings);
+        this.controlBalls(settings);
 
         // forces
 
@@ -212,12 +213,7 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
             break;
 
         case 'ball':
-            body.wanderDirection = {
-                x: Math.random(),
-                y: Math.random(),
-                z: Math.random(),
-            };
-            body.wanderTime = 0;
+            instance.wanderTime = 0;
             break;
 
         default:
@@ -344,5 +340,42 @@ GameWorld.prototype.controlPlayers = function (settings) {
 
     for (var i in inputs) {
         this.controlPlayer(settings, inputs[i], settings.players[i]);
+    }
+};
+
+GameWorld.prototype.controlBall = function (physics, instance) {
+    var body = instance.getBody();
+
+    // TODO: seed-based random?
+    if (instance.wanderTime <= 0) {
+        instance.wanderTime += 2500 + 5000 * Math.random();
+
+        body.quaternion = new CANNON.Quaternion(
+            Math.random() - 0.5, Math.random() - 0.5,
+            Math.random() - 0.5, Math.random() - 0.5
+        ); // TODO
+    }
+
+    // apply
+
+    body.force = body.force.vadd(
+        body.quaternion.vmult({
+            x: 0,
+            y: 0,
+            z: -physics.force,
+        })
+    );
+
+    instance.wanderTime -= this.timeStep;
+};
+
+GameWorld.prototype.controlBalls = function (settings) {
+    for (var i in settings.balls) {
+        var instance = settings.balls[i];
+
+        this.controlBall(
+            settings.physics[instance.type],
+            instance
+        );
     }
 };
