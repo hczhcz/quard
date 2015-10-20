@@ -48,7 +48,7 @@ var testGameMode = function () {
                 fStiction: 0.25, // T^-1
             },
             bludger: {
-                size: 1, // L
+                size: 1.5, // L
                 mass: 3, // M
                 gravity: 0.5, // ratio
 
@@ -70,14 +70,14 @@ var testGameMode = function () {
                 mass: 0.2, // M
                 gravity: -2.5, // ratio
 
-                force: 1, // M * L * T^-2
+                force: 3, // M * L * T^-2
                 fStiction: 0.25, // T^-1
 
                 interaction: {
                     hole: 5, // M * L * T^-2
                     quaffle: 5, // M * L * T^-2
                     bludger: 5, // M * L * T^-2
-                    snitch: 2, // M * L * T^-2
+                    snitch: 3, // M * L * T^-2
                 },
             },
         },
@@ -140,7 +140,7 @@ var testGameMode = function () {
 
     settings.balls.push({
         initType: 'snitch',
-        initPosition: randomQuat().vmult(basePosition),
+        initPosition: randomQuat().vmult(basePosition).mult(0.25 + 0.5 * Math.random()),
         initQuaternion: randomQuat(),
     });
 
