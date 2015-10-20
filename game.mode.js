@@ -90,13 +90,12 @@ var testGameMode = function () {
     };
 
     var randomQuat = function () {
-        // TODO: not uniform random
-        var result = new CANNON.Quaternion(
-            Math.random() - 0.5, Math.random() - 0.5,
-            Math.random() - 0.5, Math.random() - 0.5
+        return new CANNON.Quaternion().setFromEuler(
+            2 * Math.PI * Math.random(),
+            2 * Math.PI * Math.random(),
+            2 * Math.PI * Math.random(),
+            'YZX'
         );
-        result.normalize();
-        return result;
     };
 
     var basePosition = {

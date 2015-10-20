@@ -355,10 +355,12 @@ GameWorld.prototype.controlBall = function (physics, instance) {
     if (instance.wanderTime <= 0) {
         instance.wanderTime += 2500 + 5000 * Math.random();
 
-        body.quaternion = new CANNON.Quaternion(
-            Math.random() - 0.5, Math.random() - 0.5,
-            Math.random() - 0.5, Math.random() - 0.5
-        ); // TODO
+        body.quaternion.setFromEuler(
+            2 * Math.PI * Math.random(),
+            2 * Math.PI * Math.random(),
+            2 * Math.PI * Math.random(),
+            'YZX'
+        );
     }
 
     // apply
