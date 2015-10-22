@@ -189,8 +189,6 @@ GameScene.prototype.addObject = function (settings, mode, instance) {
                     case 'hole':
                         material = new THREE.MeshBasicMaterial({
                             // color: 0x4000ff,
-                            transparent: true,
-                            opacity: 0.8,
                             envMap: THREE.ImageUtils.loadTextureCube(
                                 [
                                     'background.jpg',

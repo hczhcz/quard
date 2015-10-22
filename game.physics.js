@@ -201,6 +201,31 @@ var GameWorld = function (settings, oninit, onsimulate, aftersimulate, oncontrol
 
         onsimulate.call(this);
     }, function () {
+        // check goals
+
+        // TODO
+        for (var i in settings.goals) {
+            for (var j in settings.balls) {
+                var goal = settings.goals[i];
+                var goalBody = goal.getBody();
+                var goalPhysics = settings.physics[goal.type];
+                var ball = settings.balls[j];
+                var ballBody = ball.getBody();
+                var ballPhysics = settings.physics[ball.type];
+
+                var vDistance = ballBody.position.vsub(goalBody.position);
+                var distance = vDistance.length();
+                if (distance <= goalPhysics.size - ballPhysics.size) {
+                    // alert('goal!'); // TODO
+
+                    ball.position = vDistance.mult(settings.zone.inner / distance);
+
+                    // really?
+                    ball.velocity = ball.velocity.mult(settings.zone.size / goalPhysics.size);
+                }
+            }
+        }
+
         // call handler
 
         aftersimulate.call(this);
