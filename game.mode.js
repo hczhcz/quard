@@ -8,8 +8,10 @@ var testGameMode = function () {
             inner: 95, // L
 
             gravity: 5, // L * T^-2
+            gOffset: 0, // ratio
             limiting1: 40, // L * T^-2 * (size / border)
             limiting2: 20, // L * T^-2 * (size / border)
+            lOffset: 0.2, // ratio
         },
 
         me: 0,
