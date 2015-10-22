@@ -30,7 +30,8 @@
 
         var keyMap = {};
         var keyAD = 0;
-        var keyWS = 0;
+        var keyW = 0;
+        var keyS = 0;
         var mouseLR = 0;
         var mouseTB = 0;
 
@@ -63,11 +64,15 @@
             if (hasD || (!hasA && keyAD > 0)) {
                 keyAD = Math.max(keyAD - 1, -20);
             }
-            if (hasW || (!hasS && keyWS < 0)) {
-                keyWS = Math.min(keyWS + 1, 20);
+            if (hasW) {
+                keyW = Math.min(keyW + 1, 20);
+            } else {
+                keyW = Math.max(keyW - 1, 0);
             }
-            if (hasS || (!hasW && keyWS > 0)) {
-                keyWS = Math.max(keyWS - 1, -20);
+            if (hasS) {
+                keyS = Math.min(keyS + 1, 20);
+            } else {
+                keyS = Math.max(keyS - 1, 0);
             }
 
             return {
@@ -78,8 +83,10 @@
                     zx: 0.05 * keyAD,
                     // rolling
                     xy: mouseLR,
+
                     // front-back
-                    force: 0.05 * keyWS,
+                    force: 0.05 * keyW,
+                    break: 0.05 * keyS,
                 }
             };
         });

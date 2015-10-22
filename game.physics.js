@@ -320,9 +320,11 @@ GameWorld.prototype.controlPlayer = function (input, physics, instance) {
 
     // normalize
 
-    for (var i in input) {
-        input[i] = Math.min(Math.max(input[i], -1), 1);
-    }
+    input.yz = Math.min(Math.max(input.yz, -1), 1);
+    input.zx = Math.min(Math.max(input.zx, -1), 1);
+    input.xy = Math.min(Math.max(input.xy, -1), 1);
+    input.force = Math.min(Math.max(input.force, 0), 1);
+    input.break = Math.min(Math.max(input.break, 0), 1);
 
     // apply
 
@@ -330,8 +332,14 @@ GameWorld.prototype.controlPlayer = function (input, physics, instance) {
         body.quaternion.vmult({
             x: 0,
             y: 0,
-            z: -physics.force * (0.6 * input.force + 0.4),
+            z: -physics.force * input.force,
         })
+    );
+
+    body.force = body.force.vadd(
+        body.velocity.mult(
+            -physics.force * input.break / body.velocity.length()
+        )
     );
 
     body.torque = body.quaternion.vmult({ // vadd?

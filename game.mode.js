@@ -64,7 +64,7 @@ var testGameMode = function () {
                     hole: 30, // M * L * T^-2
                     quaffle: 30, // M * L * T^-2
                     bludger: 30, // M * L * T^-2
-                    snitch: 5, // M * L * T^-2
+                    snitch: 3, // M * L * T^-2
                 },
             },
             snitch: {
@@ -72,14 +72,14 @@ var testGameMode = function () {
                 mass: 0.2, // M
                 gravity: -2.5, // ratio
 
-                force: 3, // M * L * T^-2
+                force: 2, // M * L * T^-2
                 fStiction: 0.25, // T^-1
 
                 interaction: {
-                    hole: 5, // M * L * T^-2
-                    quaffle: 5, // M * L * T^-2
-                    bludger: 5, // M * L * T^-2
-                    snitch: 3, // M * L * T^-2
+                    hole: 2, // M * L * T^-2
+                    quaffle: 2, // M * L * T^-2
+                    bludger: 3, // M * L * T^-2
+                    snitch: 2, // M * L * T^-2
                 },
             },
         },
