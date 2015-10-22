@@ -30,7 +30,7 @@ CANNON.Body.prototype.predictRotation = function (delta) {
 
 // basic physics engine object
 
-var World = function (oninit, onsimulate) {
+var World = function (oninit, onsimulate, aftersimulate) {
     // time management
 
     this.timeStep = defaultStep;
@@ -41,6 +41,7 @@ var World = function (oninit, onsimulate) {
 
     this.oninit = oninit;
     this.onsimulate = onsimulate;
+    this.aftersimulate = aftersimulate;
 
     // init
 
@@ -61,12 +62,13 @@ World.prototype.simulate = function () {
 
         this.onsimulate();
         this.step(0.001 * this.timeStep);
+        this.aftersimulate();
     }
 };
 
 // game world
 
-var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
+var GameWorld = function (settings, oninit, onsimulate, aftersimulate, oncontrol) {
     World.call(this, function () {
         // objects
 
@@ -198,6 +200,10 @@ var GameWorld = function (settings, oninit, onsimulate, oncontrol) {
         // call handler
 
         onsimulate.call(this);
+    }, function () {
+        // call handler
+
+        aftersimulate.call(this);
     });
 };
 
