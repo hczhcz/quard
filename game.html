@@ -48,34 +48,7 @@
         // game
 
         var world = new GameWorld(game, function () {
-            var mat = new CANNON.Material();
-            var mat2 = new CANNON.Material();
-
-            var shape = new CANNON.Sphere(1);
-            var body = new CANNON.Body({
-                mass: 1, material: mat, shape: shape
-            }); // mass
-
-            this.addBody(body);
-            this.testBody = body;
-
-            var shape2 = new CANNON.Sphere(1);
-            var body2 = new CANNON.Body({
-                mass: 3, material: mat2, shape: shape2
-            }); // mass
-            body2.position.set(0.00001, -30, 0);
-
-            this.addBody(body2);
-            this.testBody2 = body2;
-
-            this.addMaterial(mat);
-            this.addMaterial(mat2);
-            this.addContactMaterial(
-                new CANNON.ContactMaterial(mat, mat2)
-            );
-
-            // testing
-            body.velocity.set(0, -20, 0);
+            //
         }, function () {
             //
         }, function () {
@@ -116,29 +89,9 @@
         var scene = new GameScene('body', function (handler) {
             $(window).resize(handler);
         }, game, function () {
-            var geometry = new THREE.SphereGeometry(1, 16, 16);
-            var material = new THREE.MeshLambertMaterial({
-                color: 0x808080,
-                map: THREE.ImageUtils.loadTexture('background.jpg'),
-            });
-            var object = new THREE.Mesh(geometry, material);
-
-            this.add(object);
-            this.testObject = object;
-
-            var object2 = new THREE.Mesh(geometry, material);
-
-            this.add(object2);
-            this.testObject2 = object2;
+            //
         }, function () {
             world.simulate();
-
-            var delta = 0.001 * (world.timeNow - world.timeSim);
-
-            this.testObject.position.copy(world.testBody.predictPosition(delta));
-            this.testObject.rotation.setFromVector3(world.testBody.predictRotation(delta), 'YZX');
-            this.testObject2.position.copy(world.testBody2.predictPosition(delta));
-            this.testObject2.rotation.setFromVector3(world.testBody2.predictRotation(delta), 'YZX');
         });
     </script>
 </body>
