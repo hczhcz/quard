@@ -117,7 +117,7 @@ var GameScene = function (container, resizeBind, settings, oninit, onrender) {
 
         this.light = new THREE.PointLight(
             // hex, intensity, distance, decay
-            0xffffff, 0.5, 1000, 1
+            0xffffff, 1, 1000, 1
         );
         this.add(this.light);
 

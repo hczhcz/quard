@@ -243,7 +243,7 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
             if (!physics.getPhysicsMat) {
                 var material = new CANNON.Material();
 
-                material.friction = physics.friction || 0.3;
+                material.friction = physics.friction || 0.5;
                 material.restitution = physics.restitution || 1.5;
 
                 physics.getPhysicsMat = function () {

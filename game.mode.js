@@ -57,7 +57,7 @@ var testGameMode = function () {
                 force: 30, // M * L * T^-2
                 fStiction: 2, // T^-1
 
-                friction: 0.6, // ratio
+                friction: 1, // ratio
                 restitution: 3, // ratio
 
                 interaction: {
