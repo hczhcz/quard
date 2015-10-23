@@ -35,7 +35,7 @@ var testGameMode = function () {
                 torque: 20, // M * L^2 * T^-2
                 tStiction: 10, // T^-1
 
-                restitution: 3, // ratio
+                restitution: 2, // ratio
             },
 
             hole: {
@@ -56,17 +56,17 @@ var testGameMode = function () {
                 mass: 3, // M
                 gravity: 0.5, // ratio
 
-                force: 30, // M * L * T^-2
-                fStiction: 2, // T^-1
+                force: 15, // M * L * T^-2
+                fStiction: 1, // T^-1
 
                 friction: 1, // ratio
                 restitution: 3, // ratio
 
                 interaction: {
-                    hole: 30, // M * L * T^-2
-                    quaffle: 30, // M * L * T^-2
-                    bludger: 30, // M * L * T^-2
-                    snitch: 3, // M * L * T^-2
+                    hole: 15, // M * L * T^-2
+                    quaffle: 15, // M * L * T^-2
+                    bludger: 15, // M * L * T^-2
+                    snitch: 1, // M * L * T^-2
                 },
             },
             snitch: {
@@ -74,15 +74,25 @@ var testGameMode = function () {
                 mass: 0.2, // M
                 gravity: -2.5, // ratio
 
-                force: 2, // M * L * T^-2
+                force: 1, // M * L * T^-2
                 fStiction: 0.25, // T^-1
 
                 interaction: {
-                    hole: 2, // M * L * T^-2
-                    quaffle: 2, // M * L * T^-2
-                    bludger: 3, // M * L * T^-2
-                    snitch: 2, // M * L * T^-2
+                    hole: 1.5, // M * L * T^-2
+                    quaffle: 1, // M * L * T^-2
+                    bludger: 1, // M * L * T^-2
+                    snitch: 1, // M * L * T^-2
                 },
+            },
+        },
+
+        magics: {
+            stroke: {
+                time: 1, // T
+                duration: 0, // T
+
+                // effects
+                impulse: 50, // M * L * T^-1
             },
         },
 
