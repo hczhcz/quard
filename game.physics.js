@@ -100,10 +100,10 @@ var GameWorld = function (settings, oninit, onsimulate, aftersimulate, oncontrol
         // forces
 
         var gravity = settings.zone.gravity / settings.zone.size;
-        var limiting1 = -settings.zone.limiting1 / Math.pow(
+        var limiting1 = settings.zone.limiting1 / Math.pow(
             settings.zone.size - settings.zone.inner, 2
         );
-        var limiting2 = -settings.zone.limiting2 / Math.pow(
+        var limiting2 = settings.zone.limiting2 / Math.pow(
             settings.zone.size - settings.zone.inner, 2
         );
 
@@ -141,7 +141,7 @@ var GameWorld = function (settings, oninit, onsimulate, aftersimulate, oncontrol
                             body.position.dot(body.velocity) > 0 ?
                             limiting1 : limiting2
                         )
-                        * (distance - settings.zone.inner)
+                        * (settings.zone.inner - distance)
                         * physics.mass
                     ),
                     body.position.vadd(
@@ -365,19 +365,23 @@ GameWorld.prototype.controlPlayer = function (input, physics, instance) {
             y: 0,
             z: -physics.force * input.force,
         })
-    );
-
-    body.force = body.force.vadd(
+    ).vsub(
         body.velocity.mult(
-            -physics.force * input.break / body.velocity.length()
+            physics.force * input.break / body.velocity.length()
         )
     );
 
-    body.torque = body.quaternion.vmult({ // vadd?
-        x: physics.torque * input.yz,
-        y: physics.torque * input.zx,
-        z: physics.torque * input.xy,
-    });
+    var ang = new CANNON.Vec3(input.yz, input.zx, input.xy);
+    var angLength = ang.length();
+    body.torque = body.torque.vadd(
+        body.quaternion.vmult(ang).mult(
+            (angLength > 1 ? 1 / angLength : 1) * physics.torque
+        )
+    ).vsub(
+        body.angularVelocity.mult(
+            physics.torque * input.break / body.angularVelocity.length()
+        )
+    );
 };
 
 GameWorld.prototype.controlPlayers = function (settings) {
