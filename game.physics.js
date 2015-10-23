@@ -215,13 +215,10 @@ var GameWorld = function (settings, oninit, onsimulate, aftersimulate, oncontrol
 
                 var vDistance = ballBody.position.vsub(goalBody.position);
                 var distance = vDistance.length();
+
                 if (distance <= goalPhysics.size - ballPhysics.size) {
-                    // alert('goal!'); // TODO
-
                     ball.position = vDistance.mult(settings.zone.inner / distance);
-
-                    // really?
-                    ball.velocity = ball.velocity.mult(settings.zone.size / goalPhysics.size);
+                    ball.velocity = ball.velocity.mult(settings.zone.goalRestitution);
                 }
             }
         }

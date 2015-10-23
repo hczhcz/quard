@@ -12,6 +12,8 @@ var testGameMode = function () {
             limiting1: 40, // L * T^-2 * (size / border)
             limiting2: 20, // L * T^-2 * (size / border)
             lOffset: 0.2, // ratio
+
+            goalRestitution: 3, // ratio
         },
 
         me: 0,
