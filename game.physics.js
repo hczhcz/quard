@@ -203,25 +203,8 @@ var GameWorld = function (settings, oninit, onsimulate, aftersimulate, oncontrol
     }, function () {
         // check goals
 
-        // TODO
-        for (var i in settings.goals) {
-            for (var j in settings.balls) {
-                var goal = settings.goals[i];
-                var goalBody = goal.getBody();
-                var goalPhysics = settings.physics[goal.type];
-                var ball = settings.balls[j];
-                var ballBody = ball.getBody();
-                var ballPhysics = settings.physics[ball.type];
-
-                var vDistance = ballBody.position.vsub(goalBody.position);
-                var distance = vDistance.length();
-
-                if (distance <= goalPhysics.size - ballPhysics.size) {
-                    ball.position = vDistance.mult(settings.zone.inner / distance);
-                    ball.velocity = ball.velocity.mult(settings.zone.goalRestitution);
-                }
-            }
-        }
+        this.checkGoals(settings, settings.balls);
+        this.checkGoals(settings, settings.players);
 
         // call handler
 
@@ -431,5 +414,35 @@ GameWorld.prototype.controlBalls = function (settings) {
             settings.physics[instance.type],
             instance
         );
+    }
+};
+
+GameWorld.prototype.checkGoal = function (size, goalPhysics, goal, physics, instance) {
+    var goalBody = goal.getBody();
+    var body = instance.getBody();
+
+    var vDistance = body.position.vsub(goalBody.position);
+    var distance = vDistance.length();
+
+    if (distance <= goalPhysics.size - physics.size) {
+        body.position = vDistance.mult(size / distance);
+        body.velocity = body.velocity.mult(goalPhysics.restitution);
+    }
+};
+
+GameWorld.prototype.checkGoals = function (settings, instances) {
+    for (var i in settings.goals) {
+        for (var j in instances) {
+            var goal = settings.goals[i];
+            var instance = instances[j];
+
+            this.checkGoal(
+                settings.zone.inner,
+                settings.physics[goal.type],
+                goal,
+                settings.physics[instance.type],
+                instance
+            );
+        }
     }
 };
