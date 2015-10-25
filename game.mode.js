@@ -88,11 +88,11 @@ var testGameMode = function () {
 
         magics: {
             stroke: {
-                time: 1, // T
+                time: 3, // T
                 duration: 0, // T
 
                 // effects
-                impulse: 50, // M * L * T^-1
+                impulse: 80, // M * L * T^-1
             },
         },
 
@@ -123,6 +123,9 @@ var testGameMode = function () {
         initType: 'player',
         initPosition: playerQuat.vmult(basePosition),
         initQuaternion: playerQuat,
+
+        magic: 'stroke',
+        magicTime: 0,
     });
 
     settings.goals.push({
