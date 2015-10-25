@@ -326,7 +326,7 @@ GameWorld.prototype.addObject = function (settings, mode, instance) {
     this.addBody(body);
 };
 
-GameWorld.prototype.controlPlayer = function (input, physics, instance) {
+GameWorld.prototype.controlPlayer = function (input, physics, magic, instance) {
     var body = instance.getBody();
 
     // normalize
@@ -362,6 +362,49 @@ GameWorld.prototype.controlPlayer = function (input, physics, instance) {
             physics.torque * input.break / body.angularVelocity.length()
         )
     );
+
+    var playMagic = function () {
+        switch (instance.magic) {
+            case 'stroke':
+                // window.xxx=body
+                body.applyLocalImpulse(
+                    new CANNON.Vec3(
+                        0, 0, -magic.impulse
+                    ),
+                    new CANNON.Vec3(
+                        0, 0, 0
+                    )
+                );
+                break;
+
+            default:
+                throw new Error();
+        }
+    };
+
+    // magics
+
+    if (instance.magicTime < 0) {
+        // happening
+
+        playMagic();
+        instance.magicTime += this.timeStep;
+    } else if (input.btn1) {
+        if (instance.magicTime < 1000 * magic.time) {
+            // starting
+
+            instance.magicTime += this.timeStep;
+        } else {
+            // started
+
+            playMagic();
+            instance.magicTime = -1000 * magic.duration;
+        }
+    } else {
+        // cancelled
+
+        instance.magicTime = 0;
+    }
 };
 
 GameWorld.prototype.controlPlayers = function (settings) {
@@ -373,6 +416,7 @@ GameWorld.prototype.controlPlayers = function (settings) {
         this.controlPlayer(
             inputs[i],
             settings.physics[instance.type],
+            settings.magics[instance.magic],
             instance
         );
     }

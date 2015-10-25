@@ -32,18 +32,40 @@
         var keyAD = 0;
         var keyW = 0;
         var keyS = 0;
+        var mouseMap = {};
         var mouseLR = 0;
         var mouseTB = 0;
 
         $('body').keydown(function (event) {
             keyMap[event.which] = true;
+
+            event.preventDefault();
         });
         $('body').keyup(function (event) {
             keyMap[event.which] = false;
+
+            event.preventDefault();
         });
         $('body').mousemove(function (event) {
             mouseLR = 1 - 2 * event.offsetX / $('body').width();
             mouseTB = 2 * event.offsetY / $('body').height() - 1;
+
+            event.preventDefault();
+        });
+        $('body').mousedown(function (event) {
+            mouseMap[event.button] = true;
+
+            event.preventDefault();
+        });
+        $('body').mouseup(function (event) {
+            mouseMap[event.button] = false;
+
+            event.preventDefault();
+        });
+        $('body').mouseout(function (event) {
+            mouseMap = {};
+
+            event.preventDefault();
         });
 
         // game
@@ -89,6 +111,11 @@
                     // front-back
                     force: 0.05 * keyW,
                     break: 0.05 * keyS,
+
+                    // tools
+                    btn1: mouseMap[0],
+                    // btn2: mouseMap[2],
+                    // btn3: mouseMap[1],
                 }
             };
         });
