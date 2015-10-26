@@ -363,7 +363,7 @@ GameWorld.prototype.controlPlayer = function (input, physics, magic, instance) {
         )
     );
 
-    var playMagic = function () {
+    var startMagic = function () {
         switch (instance.magic) {
             case 'stroke':
                 // window.xxx=body
@@ -375,6 +375,17 @@ GameWorld.prototype.controlPlayer = function (input, physics, magic, instance) {
                         0, 0, 0
                     )
                 );
+                break;
+
+            default:
+                throw new Error();
+        }
+    };
+
+    var playMagic = function () {
+        switch (instance.magic) {
+            case 'stroke':
+                // nothing
                 break;
 
             default:
@@ -400,7 +411,7 @@ GameWorld.prototype.controlPlayer = function (input, physics, magic, instance) {
             } else {
                 // started
 
-                playMagic();
+                startMagic();
                 instance.magicTime = -1000 * magic.duration;
             }
         } else {
