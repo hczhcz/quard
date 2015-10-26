@@ -88,8 +88,8 @@ var testGameMode = function () {
 
         magics: {
             stroke: {
-                time: 3, // T
-                duration: 0, // T
+                time: 2, // T
+                duration: 2, // T
 
                 // effects
                 impulse: 80, // M * L * T^-1

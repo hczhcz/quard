@@ -142,6 +142,9 @@
             //
         }, function () {
             world.simulate();
+        });
+
+        setInterval(function () {
 
             $('#debug').empty();
 
@@ -172,7 +175,7 @@
 
             showItem('input', inputs[0]);
             showItem('player', game.players[0]);
-        });
+        }, 200);
     </script>
 </body>
 </html>
