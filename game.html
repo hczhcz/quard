@@ -12,15 +12,28 @@
 
             overflow: hidden;
         }
+
+        #debug {
+            position: absolute;
+            z-index: 1;
+
+            color: white;
+            opacity: 0.5;
+            font-size: 8px;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
+    <table id='debug'></table>
+
     <script src='jquery.min.js'></script>
     <script src='cannon.min.js'></script>
     <script src='three.min.js'></script>
     <script src='game.mode.js'></script>
     <script src='game.physics.js'></script>
     <script src='game.scene.js'></script>
+
     <script>
         'use strict';
 
@@ -35,6 +48,7 @@
         var mouseMap = {};
         var mouseLR = 0;
         var mouseTB = 0;
+        var inputs = {};
 
         $('body').keydown(function (event) {
             keyMap[event.which] = true;
@@ -99,25 +113,25 @@
                 keyS = Math.max(keyS - 1, 0);
             }
 
-            return {
-                0: {
-                    // up-down
-                    yz: mouseTB,
-                    // left-right
-                    zx: 0.05 * keyAD,
-                    // rolling
-                    xy: mouseLR,
+            inputs[0] = {
+                // up-down
+                yz: mouseTB,
+                // left-right
+                zx: 0.05 * keyAD,
+                // rolling
+                xy: mouseLR,
 
-                    // front-back
-                    force: 0.05 * keyW,
-                    break: 0.05 * keyS,
+                // front-back
+                force: 0.05 * keyW,
+                break: 0.05 * keyS,
 
-                    // tools
-                    btn1: mouseMap[0],
-                    // btn2: mouseMap[2],
-                    // btn3: mouseMap[1],
-                }
+                // tools
+                btn1: mouseMap[0],
+                // btn2: mouseMap[2],
+                // btn3: mouseMap[1],
             };
+
+            return inputs;
         });
 
         // scene
@@ -128,6 +142,36 @@
             //
         }, function () {
             world.simulate();
+
+            $('#debug').empty();
+
+            var showItem = function (name, data) {
+                if (typeof data == 'object') {
+                    // data = '<object>'
+                    for (var i in data) {
+                        if (/^init[A-Z]\w+/.test(i) || /^predicted[A-Z]\w+/.test(i)) {
+                            // ignore
+                        } else {
+                            showItem(name + '.' + i, data[i]);
+                        }
+                    }
+                    return;
+                } else if (typeof data == 'function') {
+                    return; // ignore
+                } else if (typeof data == 'number') {
+                    data = data.toFixed(3);
+                }
+                $('#debug').append(
+                    $('<tr />').append(
+                        $('<td />').text(name)
+                    ).append(
+                        $('<td />').text(data)
+                    )
+                );
+            };
+
+            showItem('input', inputs[0]);
+            showItem('player', game.players[0]);
         });
     </script>
 </body>
