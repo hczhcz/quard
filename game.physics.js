@@ -389,21 +389,27 @@ GameWorld.prototype.controlPlayer = function (input, physics, magic, instance) {
 
         playMagic();
         instance.magicTime += this.timeStep;
-    } else if (input.btn1) {
-        if (instance.magicTime < 1000 * magic.time) {
-            // starting
 
-            instance.magicTime += this.timeStep;
-        } else {
-            // started
-
-            playMagic();
-            instance.magicTime = -1000 * magic.duration;
-        }
+        instance.magicStatus = 0.001 * instance.magicTime / magic.duration;
     } else {
-        // cancelled
+        if (input.btn1) {
+            if (instance.magicTime < 1000 * magic.time) {
+                // starting
 
-        instance.magicTime = 0;
+                instance.magicTime += this.timeStep;
+            } else {
+                // started
+
+                playMagic();
+                instance.magicTime = -1000 * magic.duration;
+            }
+        } else {
+            // cancelled
+
+            instance.magicTime = 0;
+        }
+
+        instance.magicStatus = 0.001 * instance.magicTime / magic.time;
     }
 };
 
