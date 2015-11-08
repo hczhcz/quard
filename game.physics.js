@@ -1,6 +1,6 @@
 'use strict';
 
-var doPrediction = false;
+var doPrediction = true;
 var defaultStep = 1000 / 60;
 
 // CANNON.Body extensions

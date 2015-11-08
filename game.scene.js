@@ -319,7 +319,7 @@ GameScene.prototype.renderObjects = function () {
 
 GameScene.prototype.renderPlayerView = function (me) {
     var object = me.getObject();
-    var step = 1 - Math.pow(0.995, this.timeNow - this.timeRender);
+    var step = 0.05; // 1 - Math.pow(0.75, 0.01 * (this.timeNow - this.timeRender));
 
     this.camera.position.lerp(
         new THREE.Vector3(0, 1, 10)
