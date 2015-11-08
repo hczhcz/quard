@@ -401,14 +401,16 @@ GameWorld.prototype.controlPlayer = function (input, physics, magic, instance) {
         playMagic();
         instance.magicTime += this.timeStep;
 
+        if (instance.magicTime > 0) {
+            instance.magicTime = 0;
+        }
+
         instance.magicStatus = 0.001 * instance.magicTime / magic.duration;
     } else {
         if (input.btn1) {
-            if (instance.magicTime < 1000 * magic.time) {
-                // starting
+            instance.magicTime += this.timeStep;
 
-                instance.magicTime += this.timeStep;
-            } else {
+            if (instance.magicTime > 1000 * magic.time) {
                 // started
 
                 startMagic();

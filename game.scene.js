@@ -169,9 +169,9 @@ GameScene.prototype.addObject = function (settings, mode, instance) {
     var scene = this;
     var lastType = undefined;
     object.drawType = function () { // TODO: move this to renderObject
-        if (instance.type != lastType) {
-            var physics = settings.physics[instance.type];
+        var physics = settings.physics[instance.type];
 
+        if (instance.type != lastType) {
             object.scale.set(physics.size, physics.size, physics.size);
 
             if (!physics.getDisplayMat) {
@@ -233,6 +233,44 @@ GameScene.prototype.addObject = function (settings, mode, instance) {
 
             lastType = instance.type;
         }
+
+        // special objects of players
+
+        if (instance.type == 'player') {
+            if (!physics.getMagicMat) {
+                var magicGeometry = new THREE.SphereGeometry(1.1, 32, 32);
+                var magicMaterial = new THREE.MeshLambertMaterial({
+                    color: 0x40FF40,
+                    transparent: true,
+                    opacity: 0.5,
+                });
+                physics.getMagicMat = function () {
+                    return {
+                        geometry: magicGeometry,
+                        material: magicMaterial,
+                    };
+                };
+            }
+
+            if (instance.magicStatus > 0) {
+                object.magicObject.geometry = new THREE.SphereGeometry(
+                    1.1, 8 + Math.round(24 * instance.magicStatus), 32,
+                    0, 2 * Math.PI * instance.magicStatus
+                );
+                object.magicObject.material = physics.getMagicMat().material;
+                object.magicObject.visible = true;
+            } else if (instance.magicStatus < 0) {
+                object.magicObject.geometry = physics.getMagicMat().geometry;
+                object.magicObject.material = new THREE.MeshLambertMaterial({
+                    color: 0x40FF40,
+                    transparent: true,
+                    opacity: -0.5 * instance.magicStatus,
+                });
+                object.magicObject.visible = true;
+            } else {
+                object.magicObject.visible = false;
+            }
+        }
     };
 
     // apply
@@ -244,6 +282,16 @@ GameScene.prototype.addObject = function (settings, mode, instance) {
     object.game = instance;
 
     this.add(object);
+
+    // special objects of players
+
+    if (instance.type == 'player') {
+        object.magicObject = new THREE.Mesh(
+            undefined, undefined // set later
+        );
+        object.magicObject.rotation.set(-0.5 * Math.PI, 0.5 * Math.PI, 0, 'XYZ');
+        object.add(object.magicObject);
+    }
 };
 
 GameScene.prototype.renderObject = function (object, instance) {
